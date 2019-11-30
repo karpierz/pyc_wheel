@@ -30,6 +30,8 @@ or with backup:
 
 or with quiet:
 
+.. code-block:: bash
+
     $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl --quiet
     # Output: your_wheel-1.0.0-py3-none-any.whl
 
