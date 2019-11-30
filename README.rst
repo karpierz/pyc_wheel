@@ -13,16 +13,18 @@ Overview
 Usage
 -----
 
+Processing the wheel in place:
+
 .. code-block:: bash
 
-    $ pyc_wheel your_wheel-1.0.0-py3-none-any.whl
+    $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl
     # Output: your_wheel-1.0.0-py3-none-any.whl
 
 or with backup:
 
 .. code-block:: bash
 
-    $ pyc_wheel your_wheel-1.0.0-py3-none-any.whl
+    $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl
     # Output: your_wheel-1.0.0-py3-none-any.whl
     #         your_wheel-1.0.0-py3-none-any.whl.bak
 

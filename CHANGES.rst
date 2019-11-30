@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.1rc1 (2019-11-29)
+1.0.1rc2 (2019-11-30)
 ---------------------
 - | Creating a fork of Grant Patten's *pycwheel* package
   | with a fixes allowing to work with Python3 or higher.
