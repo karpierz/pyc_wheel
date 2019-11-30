@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.1rc3 (2019-11-30)
+---------------------
+- A little fix for README.rst
+
 1.0.1rc2 (2019-11-30)
 ---------------------
 - | Creating a fork of Grant Patten's *pycwheel* package

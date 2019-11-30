@@ -24,9 +24,14 @@ or with backup:
 
 .. code-block:: bash
 
-    $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl
+    $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl --with_backup
     # Output: your_wheel-1.0.0-py3-none-any.whl
     #         your_wheel-1.0.0-py3-none-any.whl.bak
+
+or with quiet:
+
+    $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl --quiet
+    # Output: your_wheel-1.0.0-py3-none-any.whl
 
 Installation
 ============
