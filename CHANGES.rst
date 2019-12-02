@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.1 (2019-12-02)
+------------------
+- Added the ability to use wildcards.
+
 1.0.1rc3 (2019-11-30)
 ---------------------
 - A little fix for README.rst

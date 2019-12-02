@@ -12,6 +12,7 @@ import distutils
 import stat
 import shutil
 import tempfile
+import glob
 import compileall
 import zipfile
 import hashlib
@@ -165,7 +166,8 @@ def _b64encode(data):
 def main(args=None):
     from argparse import ArgumentParser
     parser = ArgumentParser(description="Compile all py files in a wheel")
-    parser.add_argument("whl_file", help="Path to whl to convert")
+    parser.add_argument("whl_file",
+                        help="Path (can contain wildcards) to whl(s) to convert")
     parser.add_argument("--with_backup", default=False, action="store_true",
                         help="Indicates whether the backup will be created.")
     parser.add_argument("--quiet", default=False, action="store_true",
@@ -173,5 +175,6 @@ def main(args=None):
                              "conversion information will be printed to "
                              "standard out.")
     args = parser.parse_args(args)
-    convert_wheel(Path(args.whl_file),
-                  with_backup=args.with_backup, quiet=args.quiet)
+    for whl_file in glob.iglob(args.whl_file):
+        convert_wheel(Path(whl_file),
+                      with_backup=args.with_backup, quiet=args.quiet)

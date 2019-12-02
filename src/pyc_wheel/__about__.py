@@ -9,8 +9,8 @@ __all__ = ('__title__', '__summary__', '__uri__', '__version_info__',
 __title__        = "pyc_wheel"
 __summary__      = "Compile all py files in a wheel to pyc files."
 __uri__          = "https://pypi.org/project/pyc_wheel/"
-__version_info__ = type("version_info", (), dict(serial=3,
-                        major=1, minor=0, micro=1, releaselevel="rc"))
+__version_info__ = type("version_info", (), dict(serial=0,
+                        major=1, minor=0, micro=1, releaselevel="final"))
 __version__      = "{0.major}.{0.minor}.{0.micro}{1}{2}".format(__version_info__,
                    dict(final="", alpha="a", beta="b", rc="rc")[__version_info__.releaselevel],
                    "" if __version_info__.releaselevel == "final" else __version_info__.serial)
