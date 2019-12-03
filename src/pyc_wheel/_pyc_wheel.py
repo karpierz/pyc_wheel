@@ -9,10 +9,12 @@ import sys
 import os
 import platform
 import distutils
+import re
 import stat
 import shutil
 import tempfile
 import glob
+import fnmatch
 import compileall
 import zipfile
 import hashlib
@@ -27,14 +29,19 @@ __all__ = ('convert_wheel',)
 HASH_ALGORITHM = hashlib.sha256
 
 
-def convert_wheel(whl_file: Path, *, with_backup=False, quiet=False):
+def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=False):
     """Generate a new whl with only pyc files."""
 
     if whl_file.suffix != ".whl":
         raise TypeError("File to convert must be a *.whl")
 
-    whl_dir  = tempfile.mkdtemp() 
+    if exclude: exclude = re.compile(exclude)
+
+    dist_info = "-".join(whl_file.stem.split("-")[:-3])
+
+    whl_dir  = tempfile.mkdtemp()
     whl_path = Path(whl_dir)
+
     try:
         # Extract our zip file temporarily
         with zipfile.ZipFile(str(whl_file), "r") as whl_zip:
@@ -44,23 +51,28 @@ def convert_wheel(whl_file: Path, *, with_backup=False, quiet=False):
                            not member.filename.endswith(".py"))]
 
         # Compile all py files
-        compileall.compile_dir(whl_dir,
-                               quiet=int(quiet), force=True, legacy=True)
+        if not compileall.compile_dir(whl_dir, rx=exclude,
+                                      ddir="<{}>".format(dist_info),
+                                      quiet=int(quiet), force=True, legacy=True):
+            raise RuntimeError("Error compiling Python sources in wheel "
+                               "{!s}".format(whl_file.name))
 
         # Remove all original py files
         for py_file in whl_path.glob("**/*.py"):
             if py_file.is_file():
-                if not quiet: print("Deleting py file: {!s}".format(py_file))
-                py_file.chmod(stat.S_IWUSR)
-                py_file.unlink()
+                if exclude is None or not exclude.search(str(py_file)):
+                    if not quiet: print("Deleting py file: {!s}".format(py_file))
+                    py_file.chmod(stat.S_IWUSR)
+                    py_file.unlink()
 
         for root, dirs, files in os.walk(whl_dir):
             for fname in files:
                 if fname.endswith(".py"):
                     py_file = Path(root)/fname
-                    if not quiet: print("Removing file: {!s}".format(py_file))
-                    py_file.chmod(stat.S_IWUSR)
-                    py_file.unlink()
+                    if exclude is None or not exclude.search(str(py_file)):
+                        if not quiet: print("Removing file: {!s}".format(py_file))
+                        py_file.chmod(stat.S_IWUSR)
+                        py_file.unlink()
 
         for member in members:
             file_path = whl_path/member.filename
@@ -70,9 +82,8 @@ def convert_wheel(whl_file: Path, *, with_backup=False, quiet=False):
             except:
                 pass # ignore errors
 
-        dist = "-".join(whl_file.stem.split("-")[:-3])
-        dist_info_path = whl_path/"{}.dist-info".format(dist)
-        rewrite_dist_info(dist_info_path)
+        dist_info_path = whl_path/"{}.dist-info".format(dist_info)
+        rewrite_dist_info(dist_info_path, exclude=exclude)
 
         # Rezip the file with the new version info
         whl_file_zip = whl_path.with_suffix(".zip")
@@ -86,7 +97,7 @@ def convert_wheel(whl_file: Path, *, with_backup=False, quiet=False):
         shutil.rmtree(whl_dir, ignore_errors=True)
 
 
-def rewrite_dist_info(dist_info_path: Path):
+def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
     """Rewrite the record file with pyc files instead of py files."""
 
     whl_path = dist_info_path.resolve().parent
@@ -101,23 +112,24 @@ def rewrite_dist_info(dist_info_path: Path):
         for file_dest, file_hash, file_len in csv.reader(record):
             if file_dest.endswith(".py"):
                 # Do not keep py files, replace with pyc files
-                file_dest = Path(file_dest)
-                #pyc_fname = "{}.{}-{}{}.pyc".format(
-                #                file_dest.stem,
-                #                platform.python_implementation().lower(),
-                #                sys.version_info.major,
-                #                sys.version_info.minor)
-                #pyc_file = file_dest.parent/"__pycache__"/pyc_fname
-                pyc_file = file_dest.with_suffix(".pyc")
-                file_dest = str(pyc_file)
+                if exclude is None or not exclude.search(file_dest):
+                    file_dest = Path(file_dest)
+                    #pyc_fname = "{}.{}-{}{}.pyc".format(
+                    #                file_dest.stem,
+                    #                platform.python_implementation().lower(),
+                    #                sys.version_info.major,
+                    #                sys.version_info.minor)
+                    #pyc_file = file_dest.parent/"__pycache__"/pyc_fname
+                    pyc_file = file_dest.with_suffix(".pyc")
+                    file_dest = str(pyc_file)
 
-                pyc_path = whl_path/pyc_file
-                with pyc_path.open("rb") as f:
-                    data = f.read()
-                file_hash = HASH_ALGORITHM(data)
-                file_hash = "{}={}".format(file_hash.name,
-                                           _b64encode(file_hash.digest()))
-                file_len  = len(data)
+                    pyc_path = whl_path/pyc_file
+                    with pyc_path.open("rb") as f:
+                        data = f.read()
+                    file_hash = HASH_ALGORITHM(data)
+                    file_hash = "{}={}".format(file_hash.name,
+                                               _b64encode(file_hash.digest()))
+                    file_len  = len(data)
             record_data.append((file_dest, file_hash, file_len))
 
     with record_path.open("w", newline="\n") as record:
@@ -168,13 +180,17 @@ def main(args=None):
     parser = ArgumentParser(description="Compile all py files in a wheel")
     parser.add_argument("whl_file",
                         help="Path (can contain wildcards) to whl(s) to convert")
+    parser.add_argument("--exclude", default=None,
+                        help="skip files matching the regular expression; "
+                             "the regexp is searched for in the full path "
+                             "of each file considered for compilation")
     parser.add_argument("--with_backup", default=False, action="store_true",
                         help="Indicates whether the backup will be created.")
     parser.add_argument("--quiet", default=False, action="store_true",
                         help="Indicates whether the filenames and other "
                              "conversion information will be printed to "
-                             "standard out.")
+                             "the standard output.")
     args = parser.parse_args(args)
     for whl_file in glob.iglob(args.whl_file):
-        convert_wheel(Path(whl_file),
+        convert_wheel(Path(whl_file), exclude=args.exclude,
                       with_backup=args.with_backup, quiet=args.quiet)

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.2 (2019-12-03)
+------------------
+- Added the ability to exclude files from compilation.
+
 1.0.1 (2019-12-02)
 ------------------
 - Added the ability to use wildcards.
