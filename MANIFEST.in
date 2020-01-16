@@ -11,6 +11,7 @@ graft docs
 graft src
 
 graft tests
+exclude tests/_info_.txt tests/_report_.txt
 
 global-exclude .build .build.*
-global-exclude *.py[co] __pycache__
+global-exclude *.py[cod] __pycache__

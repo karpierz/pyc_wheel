@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0.3 (2020-01-16)
+------------------
+- Added ReadTheDocs config file.
+- Setup update.
+
 1.0.2 (2019-12-03)
 ------------------
 - Added the ability to exclude files from compilation.
