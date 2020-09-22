@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.0 (2020-09-22)
+------------------
+- Drop support for Python 3.5.
+
 1.1.0 (2020-09-22)
 ------------------
 - Add support for Python 3.9.

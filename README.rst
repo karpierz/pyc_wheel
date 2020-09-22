@@ -10,6 +10,8 @@ Overview
 with a fixes allowing to work with Python3 or higher and with a code
 reformatting and some improvements.
 
+`PyPI record`_.
+
 Usage
 -----
 
