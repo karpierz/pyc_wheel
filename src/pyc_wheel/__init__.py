@@ -1,6 +1,6 @@
-# Copyright (c) 2019-2019 Adam Karpierz
+# Copyright (c) 2019-2020 Adam Karpierz
 # Licensed under the MIT License
 # https://opensource.org/licenses/MIT
 
-from .__about__ import * ; del __about__
-from ._pyc_wheel import *
+from .__about__  import * ; del __about__   # noqa
+from ._pyc_wheel import * ; del _pyc_wheel  # noqa

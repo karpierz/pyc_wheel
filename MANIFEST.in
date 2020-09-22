@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2019 Adam Karpierz
+# Copyright (c) 2019-2020 Adam Karpierz
 # Licensed under the MIT License
 # https://opensource.org/licenses/MIT
 
@@ -11,7 +11,7 @@ graft docs
 graft src
 
 graft tests
-exclude tests/_info_.txt tests/_report_.txt
+exclude tests/_info_.txt tests/_report_*.txt
 
 global-exclude .build .build.*
 global-exclude *.py[cod] __pycache__

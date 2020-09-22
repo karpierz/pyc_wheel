@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.1.0 (2020-09-22)
+------------------
+- Add support for Python 3.9.
+- `Fixed improper permission setting to read distribution.
+  <https://github.com/karpierz/pyc_wheel/pull/4>`_
+- Setup general update and cleanup.
+
 1.0.3 (2020-01-16)
 ------------------
 - Added ReadTheDocs config file.
@@ -20,9 +27,8 @@ Changelog
 
 1.0.1rc2 (2019-11-30)
 ---------------------
-- | Creating a fork of Grant Patten's *pycwheel* package
-  | with a fixes allowing to work with Python3 or higher.
-- Some changes and improvements.
+- | Creating a fork of Grant Patten's *pycwheel* package with a fixes,
+  | changes and improvements allowing to work with Python3 or higher.
 
 Changes of the original *pycwheel*:
 

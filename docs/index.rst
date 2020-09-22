@@ -3,14 +3,10 @@ pyc_wheel documentation
 
 .. include:: README.rst
 
-Parts of the documentation
-==========================
+Changes
+=======
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   CHANGES.rst
+.. toctree:: CHANGES.rst
 
 Indices and tables
 ==================

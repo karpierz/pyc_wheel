@@ -1,14 +1,14 @@
 pyc_wheel
 =========
 
-*Compile all py files in a wheel to pyc files.*
+Compile all py files in a wheel to pyc files.
 
 Overview
 ========
 
-  |package_bold| is a strict fork of Grant Patten's pycwheel_ package
-  with a fixes allowing to work with Python3 or higher and with a code
-  reformatting and some improvements.
+|package_bold| is a strict fork of Grant Patten's pycwheel_ package
+with a fixes allowing to work with Python3 or higher and with a code
+reformatting and some improvements.
 
 Usage
 -----
@@ -24,7 +24,7 @@ or with backup:
 
 .. code-block:: bash
 
-    $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl --with_backup
+    $ python -m pyc_wheel --with_backup your_wheel-1.0.0-py3-none-any.whl
     # Output: your_wheel-1.0.0-py3-none-any.whl
     #         your_wheel-1.0.0-py3-none-any.whl.bak
 
@@ -32,7 +32,7 @@ or with quiet:
 
 .. code-block:: bash
 
-    $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl --quiet
+    $ python -m pyc_wheel --quiet your_wheel-1.0.0-py3-none-any.whl
     # Output: your_wheel-1.0.0-py3-none-any.whl
 
 Installation
@@ -52,34 +52,12 @@ Prerequisites:
 
 To install run:
 
-.. parsed-literal::
+  .. parsed-literal::
 
     python -m pip install --upgrade |package|
 
 Development
 ===========
-
-Visit `development page`_.
-
-Installation from sources:
-
-clone the sources:
-
-.. parsed-literal::
-
-    git clone |respository| |package|
-
-and run:
-
-.. parsed-literal::
-
-    python -m pip install ./|package|
-
-or on development mode:
-
-.. parsed-literal::
-
-    python -m pip install --editable ./|package|
 
 Prerequisites:
 
@@ -87,12 +65,33 @@ Prerequisites:
 
     python -m pip install --upgrade tox
 
+Visit `development page`_.
+
+Installation from sources:
+
+clone the sources:
+
+  .. parsed-literal::
+
+    git clone |respository| |package|
+
+and run:
+
+  .. parsed-literal::
+
+    python -m pip install ./|package|
+
+or on development mode:
+
+  .. parsed-literal::
+
+    python -m pip install --editable ./|package|
+
 License
 =======
 
   | Copyright (c) 2016 Grant Patten
-  | Copyright (c) 2019-2019 Adam Karpierz
-  |
+  | Copyright (c) 2019-2020 Adam Karpierz
   | Licensed under the MIT License
   | https://opensource.org/licenses/MIT
   | Please refer to the accompanying LICENSE file.
@@ -107,5 +106,5 @@ Authors
 .. |package_bold| replace:: **pyc_wheel**
 .. |respository| replace:: https://github.com/karpierz/pyc_wheel.git
 .. _development page: https://github.com/karpierz/pyc_wheel/
-
+.. _PyPI record: https://pypi.org/project/pyc_wheel/
 .. _pycwheel: https://pypi.org/project/pycwheel/

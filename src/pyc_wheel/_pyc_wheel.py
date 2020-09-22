@@ -1,5 +1,5 @@
 # Copyright (c) 2016 Grant Patten
-# Copyright (c) 2019-2019 Adam Karpierz
+# Copyright (c) 2019-2020 Adam Karpierz
 # Licensed under the MIT License
 # https://opensource.org/licenses/MIT
 
@@ -7,14 +7,12 @@
 
 import sys
 import os
-import platform
 import distutils
 import re
 import stat
 import shutil
 import tempfile
 import glob
-import fnmatch
 import compileall
 import zipfile
 import hashlib
@@ -47,8 +45,7 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=Fals
         with zipfile.ZipFile(str(whl_file), "r") as whl_zip:
             whl_zip.extractall(whl_dir)
             members = [member for member in whl_zip.infolist()
-                       if (member.is_dir() or
-                           not member.filename.endswith(".py"))]
+                       if member.is_dir() or not member.filename.endswith(".py")]
 
         # Compile all py files
         if not compileall.compile_dir(whl_dir, rx=exclude,
@@ -79,8 +76,8 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=Fals
             timestamp = datetime(*member.date_time).timestamp()
             try:
                 os.utime(str(file_path), (timestamp, timestamp))
-            except:
-                pass # ignore errors
+            except Exception:
+                pass  # ignore errors
 
         dist_info_path = whl_path/"{}.dist-info".format(dist_info)
         rewrite_dist_info(dist_info_path, exclude=exclude)
@@ -114,12 +111,13 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
                 # Do not keep py files, replace with pyc files
                 if exclude is None or not exclude.search(file_dest):
                     file_dest = Path(file_dest)
-                    #pyc_fname = "{}.{}-{}{}.pyc".format(
-                    #                file_dest.stem,
-                    #                platform.python_implementation().lower(),
-                    #                sys.version_info.major,
-                    #                sys.version_info.minor)
-                    #pyc_file = file_dest.parent/"__pycache__"/pyc_fname
+                    # import platform
+                    # pyc_fname = "{}.{}-{}{}.pyc".format(
+                    #             file_dest.stem,
+                    #             platform.python_implementation().lower(),
+                    #             sys.version_info.major,
+                    #             sys.version_info.minor)
+                    # pyc_file = file_dest.parent/"__pycache__"/pyc_fname
                     pyc_file = file_dest.with_suffix(".pyc")
                     file_dest = str(pyc_file)
 
@@ -175,7 +173,7 @@ def _b64encode(data):
     return base64.urlsafe_b64encode(data).rstrip(b"=").decode("utf-8")
 
 
-def main(args=None):
+def main(argv=None):
     from argparse import ArgumentParser
     parser = ArgumentParser(description="Compile all py files in a wheel")
     parser.add_argument("whl_file",
@@ -190,7 +188,7 @@ def main(args=None):
                         help="Indicates whether the filenames and other "
                              "conversion information will be printed to "
                              "the standard output.")
-    args = parser.parse_args(args)
+    args = parser.parse_args(argv)
     for whl_file in glob.iglob(args.whl_file):
         convert_wheel(Path(whl_file), exclude=args.exclude,
                       with_backup=args.with_backup, quiet=args.quiet)
