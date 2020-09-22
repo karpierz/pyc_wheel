@@ -105,7 +105,7 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
     # Rewrite the record file with pyc files instead of py files.
 
     record_path = dist_info_path/"RECORD"
-    record_path.chmod(stat.S_IWUSR)
+    record_path.chmod(stat.S_IWUSR | stat.S_IRUSR)
 
     record_data = []
     with record_path.open("r") as record:
@@ -139,7 +139,7 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
     # Rewrite the wheel info file.
 
     wheel_path = dist_info_path/"WHEEL"
-    wheel_path.chmod(stat.S_IWUSR)
+    wheel_path.chmod(stat.S_IWUSR | stat.S_IRUSR)
 
     with wheel_path.open("r") as wheel:
         wheel_data = wheel.readlines()
