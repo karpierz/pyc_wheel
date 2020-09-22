@@ -9,7 +9,7 @@ __all__ = ('__title__', '__summary__', '__uri__', '__version_info__',
 __title__        = "pyc_wheel"
 __summary__      = "Compile all py files in a wheel to pyc files."
 __uri__          = "https://pypi.org/project/pyc_wheel/"
-__version_info__ = type("version_info", (), dict(major=1, minor=2, micro=0,
+__version_info__ = type("version_info", (), dict(major=1, minor=2, micro=1,
                         releaselevel="final", serial=0))
 __version__      = "{0.major}.{0.minor}.{0.micro}{1}{2}".format(__version_info__,
                    dict(alpha="a", beta="b", candidate="rc", final="",
