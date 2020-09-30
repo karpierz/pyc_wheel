@@ -4,5 +4,4 @@
 
 import sys
 from ._pyc_wheel import main
-result = main()
-sys.exit(result)
+sys.exit(main())
