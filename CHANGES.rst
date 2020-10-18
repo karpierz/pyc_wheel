@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.3 (2020-10-17)
+1.2.4 (2020-10-18)
 ------------------
 - Drop support for Python 3.5.
 - Fixed docs setup.
