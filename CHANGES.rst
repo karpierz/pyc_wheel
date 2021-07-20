@@ -3,7 +3,7 @@ Changelog
 
 1.2.5 (2021-07-20)
 ------------------
-- Setup general update and improvenet.
+- Setup general update and improvement.
 
 1.2.4 (2020-10-18)
 ------------------
