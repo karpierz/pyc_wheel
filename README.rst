@@ -12,6 +12,8 @@ reformatting and some improvements.
 
 `PyPI record`_.
 
+`Documentation`_.
+
 Usage
 -----
 
@@ -93,7 +95,7 @@ License
 =======
 
   | Copyright (c) 2016 Grant Patten
-  | Copyright (c) 2019-2020 Adam Karpierz
+  | Copyright (c) 2019-2021 Adam Karpierz
   | Licensed under the MIT License
   | https://opensource.org/licenses/MIT
   | Please refer to the accompanying LICENSE file.
@@ -107,6 +109,7 @@ Authors
 .. |package| replace:: pyc_wheel
 .. |package_bold| replace:: **pyc_wheel**
 .. |respository| replace:: https://github.com/karpierz/pyc_wheel.git
-.. _development page: https://github.com/karpierz/pyc_wheel/
+.. _development page: https://github.com/karpierz/pyc_wheel
 .. _PyPI record: https://pypi.org/project/pyc_wheel/
+.. _Documentation: https://pyc_wheel.readthedocs.io/
 .. _pycwheel: https://pypi.org/project/pycwheel/

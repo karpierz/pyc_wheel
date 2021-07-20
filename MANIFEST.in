@@ -1,17 +1,18 @@
-# Copyright (c) 2019-2020 Adam Karpierz
+# Copyright (c) 2019-2021 Adam Karpierz
 # Licensed under the MIT License
 # https://opensource.org/licenses/MIT
 
 include README.rst
 include CHANGES.rst
 include LICENSE
+include pyproject.toml
 
 graft docs
 
 graft src
 
 graft tests
-exclude tests/_info_.txt tests/_report_*.txt
 
-global-exclude .build .build.*
+global-exclude \#* \#*/**
+global-exclude .build .build/** .build.* .build.*/**
 global-exclude *.py[cod] __pycache__

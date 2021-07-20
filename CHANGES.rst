@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.5 (2021-07-20)
+------------------
+- Setup general update and improvenet.
+
 1.2.4 (2020-10-18)
 ------------------
 - Drop support for Python 3.5.

@@ -1,5 +1,5 @@
 # Copyright (c) 2016 Grant Patten
-# Copyright (c) 2019-2020 Adam Karpierz
+# Copyright (c) 2019-2021 Adam Karpierz
 # Licensed under the MIT License
 # https://opensource.org/licenses/MIT
 
@@ -21,7 +21,7 @@ import base64
 from datetime import datetime
 from pathlib import Path
 
-__all__ = ('convert_wheel',)
+__all__ = ('convert_wheel', 'main')
 
 
 HASH_ALGORITHM = hashlib.sha256
@@ -173,7 +173,7 @@ def _b64encode(data):
     return base64.urlsafe_b64encode(data).rstrip(b"=").decode("utf-8")
 
 
-def main(argv=None):
+def main(argv=sys.argv[1:]):
     from argparse import ArgumentParser
     parser = ArgumentParser(description="Compile all py files in a wheel")
     parser.add_argument("whl_file",

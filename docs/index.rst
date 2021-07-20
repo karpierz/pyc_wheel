@@ -4,8 +4,8 @@ pyc_wheel documentation
 .. _readme:
 .. include:: README.rst
 
-Changes
-=======
+Contents
+========
 
 .. toctree::
    :maxdepth: 2
