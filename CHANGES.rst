@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.5 (2021-07-20)
+1.2.6 (2021-07-20)
 ------------------
 - Setup general update and improvement.
 
