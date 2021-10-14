@@ -6,6 +6,7 @@ include README.rst
 include CHANGES.rst
 include LICENSE
 include pyproject.toml
+include .readthedocs.yml
 
 graft docs
 
