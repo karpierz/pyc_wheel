@@ -39,6 +39,18 @@ or with quiet:
     $ python -m pyc_wheel --quiet your_wheel-1.0.0-py3-none-any.whl
     # Output: your_wheel-1.0.0-py3-none-any.whl
 
+or skipping compilation for a file subset:
+
+.. code-block:: bash
+
+    $ python -m pyc_wheel --exclude "some/regex" your_wheel-1.0.0-py3-none-any.whl
+
+To check all available processing options:
+
+.. code-block:: bash
+
+    $ python -m pyc_wheel --help
+
 Installation
 ============
 
