@@ -7,6 +7,7 @@
 
 import sys
 import os
+import setuptools
 import distutils
 import re
 import stat
