@@ -177,15 +177,26 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
         raise RuntimeError("No tags present in {}/{}; cannot determine target"
                            " wheel filename".format(wheel_path.parent.name,
                                                     wheel_path.name))
-    # Reassemble the tags for the wheel file
-    interps   = sorted({tag.split("-")[0] for tag in tags})
-    abis      = sorted({tag.split("-")[1] for tag in tags})
-    platforms = sorted({tag.split("-")[2] for tag in tags})
+    # Reassemble the tag for the wheel file
+    pyc_tag = None
+    for tag in tags:
+        tag_components = tag.split("-")
+        python_tag = tag_components[0]
+        py_major_version = platform.python_version_tuple()[0]
+        if python_tag == f"py{py_major_version}":
+            tag_components[0] = create_python_tag()
+            pyc_tag = '-'.join(tag_components)
+            break
 
-    # [...]
+    if pyc_tag is None:
+        raise RuntimeError("Cannot convert wheel with the used interpreter.")
 
     with wheel_path.open("w") as wheel:
-        wheel.writelines(wheel_data)
+        for line in wheel_data:
+            if line.startswith("Tag: "):
+                wheel.write(f"Tag: {pyc_tag}")
+            else:
+                wheel.write(line)
 
 
 def _get_platform():
