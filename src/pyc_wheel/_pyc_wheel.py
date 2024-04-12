@@ -4,7 +4,8 @@
 # https://opensource.org/licenses/MIT
 
 """Compile all py files in a wheel to pyc files."""
-
+import pathlib
+import platform
 import sys
 import os
 import setuptools
@@ -26,6 +27,33 @@ __all__ = ('convert_wheel', 'main')
 
 
 HASH_ALGORITHM = hashlib.sha256
+
+
+def create_python_tag() -> str:
+    # The Python tag indicates the implementation and version required by a distribution,
+    # see https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/#python-tag
+    python_impl = platform.python_implementation()
+    if python_impl == "PyPy":
+        python_impl_abbrev = "pp"
+    elif python_impl == "CPython":
+        python_impl_abbrev = "cp"
+    else:
+        raise NotImplementedError("Python implementation currently not supported!")
+
+    # append major & minor version as these versions may change the magic number indicating the pyc file version
+    py_major_version = platform.python_version_tuple()[0]
+    py_minor_version = platform.python_version_tuple()[1]
+
+    return f"{python_impl_abbrev}{py_major_version}{py_minor_version}"
+
+
+def create_pyc_whl_path(source_whl: pathlib.Path) -> pathlib.Path:
+    source_whl_name = source_whl.name
+    tags = source_whl_name.split('-')  # {version}(-{build tag})?-{python tag}-{abitag}-{platform tag} -> list
+    tags[-3] = create_python_tag()
+    pyc_whl_name = '-'.join(tags)
+    pyc_whl = (source_whl.parent / pyc_whl_name).with_suffix('.whl')
+    return pyc_whl
 
 
 def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=False):
@@ -89,7 +117,7 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=Fals
         shutil.make_archive(whl_dir, "zip", root_dir=whl_dir)
         if with_backup:
             whl_file.replace(whl_file.with_suffix(whl_file.suffix + ".bak"))
-        shutil.move(str(whl_file_zip), str(whl_file))
+        shutil.move(str(whl_file_zip), str(create_pyc_whl_path(whl_file)))
     finally:
         # Clean up original directory
         shutil.rmtree(whl_dir, ignore_errors=True)
@@ -149,15 +177,26 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
         raise RuntimeError("No tags present in {}/{}; cannot determine target"
                            " wheel filename".format(wheel_path.parent.name,
                                                     wheel_path.name))
-    # Reassemble the tags for the wheel file
-    interps   = sorted({tag.split("-")[0] for tag in tags})
-    abis      = sorted({tag.split("-")[1] for tag in tags})
-    platforms = sorted({tag.split("-")[2] for tag in tags})
+    # Reassemble the tag for the wheel file
+    pyc_tag = None
+    for tag in tags:
+        tag_components = tag.split("-")
+        python_tag = tag_components[0]
+        py_major_version = platform.python_version_tuple()[0]
+        if python_tag == f"py{py_major_version}":
+            tag_components[0] = create_python_tag()
+            pyc_tag = '-'.join(tag_components)
+            break
 
-    # [...]
+    if pyc_tag is None:
+        raise RuntimeError("Cannot convert wheel with the used interpreter.")
 
     with wheel_path.open("w") as wheel:
-        wheel.writelines(wheel_data)
+        for line in wheel_data:
+            if line.startswith("Tag: "):
+                wheel.write(f"Tag: {pyc_tag}")
+            else:
+                wheel.write(line)
 
 
 def _get_platform():
