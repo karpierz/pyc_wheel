@@ -56,7 +56,7 @@ def create_pyc_whl_path(source_whl: pathlib.Path) -> pathlib.Path:
     return pyc_whl
 
 
-def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=False):
+def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=False, optimize=0):
     """Generate a new whl with only pyc files."""
 
     if whl_file.suffix != ".whl":
@@ -79,7 +79,7 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=Fals
         # Compile all py files
         if not compileall.compile_dir(whl_dir, rx=exclude,
                                       ddir="<{}>".format(dist_info),
-                                      quiet=int(quiet), force=True, legacy=True):
+                                      quiet=int(quiet), force=True, legacy=True, optimize=optimize):
             raise RuntimeError("Error compiling Python sources in wheel "
                                "{!s}".format(whl_file.name))
 
@@ -228,7 +228,12 @@ def main(argv=sys.argv[1:]):
                         help="Indicates whether the filenames and other "
                              "conversion information will be printed to "
                              "the standard output.")
+    parser.add_argument("--optimize", default=-1, type=int, choices=[0, 1, 2],
+                        help="Specifies the optimization level of the compiler."
+                             "Explicit levels are 0 (no optimization; __debug__ is true),"
+                             "1 (asserts are removed, __debug__ is false) or"
+                             "2 (docstrings are removed too)")
     args = parser.parse_args(argv)
     for whl_file in glob.iglob(args.whl_file):
         convert_wheel(Path(whl_file), exclude=args.exclude,
-                      with_backup=args.with_backup, quiet=args.quiet)
+                      with_backup=args.with_backup, quiet=args.quiet, optimize=args.optimize)
