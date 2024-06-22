@@ -228,7 +228,7 @@ def main(argv=sys.argv[1:]):
                         help="Indicates whether the filenames and other "
                              "conversion information will be printed to "
                              "the standard output.")
-    parser.add_argument("--optimize", default=-1, type=int, choices=[0, 1, 2],
+    parser.add_argument("--optimize", default=0, type=int, choices=[0, 1, 2],
                         help="Specifies the optimization level of the compiler."
                              "Explicit levels are 0 (no optimization; __debug__ is true),"
                              "1 (asserts are removed, __debug__ is false) or"
