@@ -121,7 +121,7 @@ Authors
 .. |package| replace:: pyc_wheel
 .. |package_bold| replace:: **pyc_wheel**
 .. |respository| replace:: https://github.com/karpierz/pyc_wheel.git
-.. _development page: https://github.com/karpierz/pyc_wheel
+.. _development page: https://github.com/karpierz/pyc-wheel
 .. _PyPI record: https://pypi.org/project/pyc_wheel/
-.. _Documentation: https://pyc_wheel.readthedocs.io/
+.. _Documentation: https://pyc-wheel.readthedocs.io/
 .. _pycwheel: https://pypi.org/project/pycwheel/
