@@ -1,14 +1,13 @@
 # Copyright (c) 2016 Grant Patten
-# Copyright (c) 2019-2021 Adam Karpierz
-# Licensed under the MIT License
-# https://opensource.org/licenses/MIT
+# Copyright (c) 2019 Adam Karpierz
+# SPDX-License-Identifier: MIT
 
 """Compile all py files in a wheel to pyc files."""
 import pathlib
 import platform
 import sys
 import os
-import setuptools
+import setuptools  # noqa: F401 # needed because distutils
 import distutils
 import re
 import stat
@@ -22,37 +21,40 @@ import csv
 import base64
 from datetime import datetime
 from pathlib import Path
+import logging
 
 __all__ = ('convert_wheel', 'main')
 
 
 HASH_ALGORITHM = hashlib.sha256
 
+py_implementation = platform.python_implementation()
+# append major & minor version as these versions may change
+# the magic number indicating the pyc file version
+py_major_version = platform.python_version_tuple()[0]
+py_minor_version = platform.python_version_tuple()[1]
+
 
 def create_python_tag() -> str:
-    # The Python tag indicates the implementation and version required by a distribution,
-    # see https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/#python-tag
-    python_impl = platform.python_implementation()
-    if python_impl == "PyPy":
-        python_impl_abbrev = "pp"
-    elif python_impl == "CPython":
-        python_impl_abbrev = "cp"
+    # The Python tag indicates the implementation and version required by a distribution, see:
+    # https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/#python-tag
+    if py_implementation == "CPython":
+        py_impl_abbrev = "cp"
+    elif py_implementation == "PyPy":
+        py_impl_abbrev = "pp"
     else:
         raise NotImplementedError("Python implementation currently not supported!")
 
-    # append major & minor version as these versions may change the magic number indicating the pyc file version
-    py_major_version = platform.python_version_tuple()[0]
-    py_minor_version = platform.python_version_tuple()[1]
-
-    return f"{python_impl_abbrev}{py_major_version}{py_minor_version}"
+    return f"{py_impl_abbrev}{py_major_version}{py_minor_version}"
 
 
 def create_pyc_whl_path(source_whl: pathlib.Path) -> pathlib.Path:
     source_whl_name = source_whl.name
-    tags = source_whl_name.split('-')  # {version}(-{build tag})?-{python tag}-{abitag}-{platform tag} -> list
+    # {version}(-{build tag})?-{python tag}-{abitag}-{platform tag} -> list
+    tags = source_whl_name.split("-")
     tags[-3] = create_python_tag()
-    pyc_whl_name = '-'.join(tags)
-    pyc_whl = (source_whl.parent / pyc_whl_name).with_suffix('.whl')
+    pyc_whl_name = "-".join(tags)
+    pyc_whl = (source_whl.parent/pyc_whl_name).with_suffix(".whl")
     return pyc_whl
 
 
@@ -79,7 +81,8 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=Fals
         # Compile all py files
         if not compileall.compile_dir(whl_dir, rx=exclude,
                                       ddir="<{}>".format(dist_info),
-                                      quiet=int(quiet), force=True, legacy=True, optimize=optimize):
+                                      quiet=int(quiet), force=True, legacy=True,
+                                      optimize=optimize):
             raise RuntimeError("Error compiling Python sources in wheel "
                                "{!s}".format(whl_file.name))
 
@@ -145,7 +148,6 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
                 # Do not keep py files, replace with pyc files
                 if exclude is None or not exclude.search(file_dest):
                     file_dest = Path(file_dest)
-                    # import platform
                     # pyc_fname = "{}.{}-{}{}.pyc".format(
                     #             file_dest.stem,
                     #             platform.python_implementation().lower(),
@@ -187,11 +189,20 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
     for tag in tags:
         tag_components = tag.split("-")
         python_tag = tag_components[0]
-        py_major_version = platform.python_version_tuple()[0]
         if python_tag == f"py{py_major_version}":
             tag_components[0] = create_python_tag()
-            pyc_tag = '-'.join(tag_components)
+            pyc_tag = "-".join(tag_components)
             break
+        # if (python_tag == f"cp{py_major_version}{py_minor_version}"
+        #    and py_implementation == "CPython"):
+        #     tag_components[0] = create_python_tag()
+        #     pyc_tag = "-".join(tag_components)
+        #     break
+        # if (python_tag == f"pp{py_major_version}{py_minor_version}"
+        #    and py_implementation == "PyPy"):
+        #     tag_components[0] = create_python_tag()
+        #     pyc_tag = "-".join(tag_components)
+        #     break
 
     if pyc_tag is None:
         raise RuntimeError("Cannot convert wheel with the used interpreter.")
@@ -219,8 +230,9 @@ def _b64encode(data):
 
 
 def main(argv=sys.argv[1:]):
+    """Compile all py files in a wheel"""
     from argparse import ArgumentParser
-    parser = ArgumentParser(description="Compile all py files in a wheel")
+    parser = ArgumentParser(description=main.__doc__)
     parser.add_argument("whl_file",
                         help="Path (can contain wildcards) to whl(s) to convert")
     parser.add_argument("--exclude", default=None,
@@ -229,16 +241,24 @@ def main(argv=sys.argv[1:]):
                              "of each file considered for compilation")
     parser.add_argument("--with_backup", default=False, action="store_true",
                         help="Indicates whether the backup will be created.")
-    parser.add_argument("--quiet", default=False, action="store_true",
-                        help="Indicates whether the filenames and other "
-                             "conversion information will be printed to "
-                             "the standard output.")
     parser.add_argument("--optimize", default=0, type=int, choices=[0, 1, 2],
                         help="Specifies the optimization level of the compiler."
                              "Explicit levels are 0 (no optimization; __debug__ is true),"
                              "1 (asserts are removed, __debug__ is false) or"
                              "2 (docstrings are removed too)")
+    parser.add_argument("--quiet", default=False, action="store_true",
+                        help="Indicates whether the filenames and other "
+                             "conversion information will be printed to "
+                             "the standard output.")
+    parser.add_argument("--log", type=str, default="warning",
+                        choices=["critical", "error", "warning", "info", "debug"],
+                        help="Provide logging level. "
+                             "Example --log debug, default='warning'")
     args = parser.parse_args(argv)
+    # logging config
+    logging.basicConfig(format="[%(levelname)s]:%(message)s",
+                        level=getattr(logging, args.log.upper()))
+
     for whl_file in glob.iglob(args.whl_file):
         convert_wheel(Path(whl_file), exclude=args.exclude,
                       with_backup=args.with_backup, quiet=args.quiet, optimize=args.optimize)

@@ -56,10 +56,9 @@ Installation
 
 Prerequisites:
 
-+ Python 3.6 or higher
++ Python 3.9 or higher
 
   * https://www.python.org/
-  * 3.7 is a primary test environment.
 
 + pip and setuptools
 
@@ -81,7 +80,7 @@ Prerequisites:
 
     python -m pip install --upgrade tox
 
-Visit `development page`_.
+Visit `Development page`_.
 
 Installation from sources:
 
@@ -106,10 +105,10 @@ or on development mode:
 License
 =======
 
+  | |copyright|
   | Copyright (c) 2016 Grant Patten
-  | Copyright (c) 2019-2021 Adam Karpierz
   | Licensed under the MIT License
-  | https://opensource.org/licenses/MIT
+  | https://opensource.org/license/mit
   | Please refer to the accompanying LICENSE file.
 
 Authors
@@ -120,8 +119,9 @@ Authors
 
 .. |package| replace:: pyc_wheel
 .. |package_bold| replace:: **pyc_wheel**
+.. |copyright| replace:: Copyright (c) 2019-2025 Adam Karpierz
 .. |respository| replace:: https://github.com/karpierz/pyc_wheel.git
-.. _development page: https://github.com/karpierz/pyc-wheel
+.. _Development page: https://github.com/karpierz/pyc_wheel
 .. _PyPI record: https://pypi.org/project/pyc_wheel/
 .. _Documentation: https://pyc-wheel.readthedocs.io/
 .. _pycwheel: https://pypi.org/project/pycwheel/

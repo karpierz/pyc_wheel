@@ -1,6 +1,27 @@
 Changelog
 =========
 
+1.3.0 (2025-02-10)
+------------------
+- Add support for Python 3.10, 3.11, 3.12 and 3.13
+- Drop support for Python 3.6, 3.7 and 3.8
+- Add support for PyPy 3.9 and 3.10
+- `Add --optimize argument to allow setting the optimization level
+  of the compiler. <https://github.com/karpierz/pyc_wheel/pull/14>`_
+- `Wheel name should include Python tag.
+  <https://github.com/karpierz/pyc_wheel/pull/13>`_
+- `Preserve the permissions bits.
+  <https://github.com/karpierz/pyc_wheel/pull/9>`_
+- `Extend docs for --exclude and --help.
+  <https://github.com/karpierz/pyc_wheel/pull/7>`_
+- Add --log argument to allow logging.
+- 100% code linting.
+- Copyright year update.
+- Setup update (currently based on pyproject.toml).
+- | Tox configuration has been moved to pyproject.toml
+  | and now based on tox >= 4.0
+- Setup (dependencies) update.
+
 1.2.7 (2021-10-14)
 ------------------
 - Setup update.

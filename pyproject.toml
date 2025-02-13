@@ -1,3 +1,282 @@
+# Copyright (c) 2019 Adam Karpierz
+# SPDX-License-Identifier: MIT
+
 [build-system]
-requires = ["setuptools>=57.4.0", "wheel>=0.37.0", "packaging>=21.0.0", "tox>=3.24.4"]
-build-backend = "setuptools.build_meta"
+build-backend = 'setuptools.build_meta'
+requires = ['setuptools>=75.8.0', 'packaging>=24.2.0', 'tox>=4.24.1']
+
+[project]
+name        = 'pyc_wheel'
+version     = '1.3.0'
+description = 'Compile all py files in a wheel to pyc files.'
+urls.Homepage      = 'https://pypi.org/project/pyc_wheel/'
+urls.Documentation = 'https://pyc-wheel.readthedocs.io/'
+urls.Download      = 'https://pypi.org/project/pyc_wheel/'
+urls.Source        = 'https://github.com/karpierz/pyc_wheel'
+urls.Issues        = 'https://github.com/karpierz/pyc_wheel/issues'
+license = { text = 'MIT License ; https://opensource.org/license/mit' }
+authors = [
+    { name  = 'Grant Patten, Adam Karpierz' },
+    { email = 'adam@karpierz.net' },
+]
+maintainers = [
+    { name  = 'Adam Karpierz' },
+    { email = 'adam@karpierz.net' },
+]
+keywords = ['pyc_wheel', 'pycwheel', 'wheel', 'pyc', 'compile']
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Natural Language :: Polish',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: Implementation :: PyPy',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+    'Topic :: Utilities',
+]
+requires-python = '>=3.9.0,<4.0.0'
+dependencies = [
+    # mandatory
+    'setuptools>=75.8.0',
+    'pkg-about>=1.2.8',
+    # others
+]
+dynamic = ['readme']
+optional-dependencies.'doc' = [
+    'Sphinx>=7.4.7',
+    'sphinx-autodoc-typehints>=2.3.0',
+    'sphinx-toolbox>=3.8.1',
+    'sphinx-tabs>=3.4.5', # don't touch! sphinx-toolbox requires <3.4.7
+    'sphinx-copybutton>=0.5.2',
+    'sphinxcontrib-spelling>=8.0.0',
+    'sphinx-lint>=1.0.0',
+    'restructuredtext-lint>=1.4.0',
+    'nbsphinx>=0.9.6',
+]
+optional-dependencies.'test' = [
+    'deepdiff>=8.1.1',
+    'rich>=13.9.4',
+]
+
+[project.scripts]
+#'pyc_wheel' = 'pyc_wheel.__main__:main'
+
+[project.gui-scripts]
+#'pyc_wheel-gui' = 'pyc_wheel:main_gui'
+
+#[project.entry-points.'pyc_wheel.magical']
+#epoint = 'pyc_wheel:main_epoint'
+
+[tool.setuptools.dynamic]
+readme = { file = ['README.rst', 'CHANGES.rst'], content-type = 'text/x-rst; charset=UTF-8' }
+
+[tool.setuptools]
+license-files = ['LICENSE']
+include-package-data = true
+platforms = ['any']
+zip-safe = true
+
+[tool.setuptools.packages.find]
+namespaces = false
+where = ['src']
+
+[tool.setuptools.package-dir]
+'' = 'src'
+#'pyc_wheel.tests' = 'tests'
+
+[tool.setuptools.package-data]
+pyc_wheel = [
+]
+
+[tool.setuptools.exclude-package-data]
+'*' = ['*.c','*.h','*.cpp','*.hpp','*.cxx','*.hxx','*.pyx','*.pxd']
+pyc_wheel = [
+]
+
+[tool.coverage]
+# run
+run.source = [
+    'pyc_wheel',
+    'tests',
+]
+run.omit = [
+]
+run.branch = true
+run.data_file = '.tox/coverage/.coverage'
+run.plugins = ['covdefaults']
+# report
+report.exclude_lines = [
+    # Regexes
+    # Have to re-enable the standard pragma
+    '^\s*if\s+self\.debug\s*:',
+    '^\s*if\s+__debug__\s*:',
+    '^\s*if\s+(0|False)\s*:',
+    '''if\s+__name__.*\s*==\s*['"]__main__['"]\s*:''',
+    '^\s*@unittest\.skip\(',
+    '^\s*@unittest\.skipIf\(sys\.platform\.startswith\("win"\)',
+]
+report.omit = [
+    'tests/run.py',
+]
+report.skip_covered = false
+# html report
+html.directory = '.tox/coverage/.coverage.html'
+
+[tool.flake8]
+filename = ['*.py','*.pyx']
+#include = ['tests']
+#exclude = ['.tox','*.egg','.git','__pycache__','build','_build','docs/_build','dist']
+max-line-length = 99
+ignore = ['E126','E203','E221','E251','E302','E701','E702','E731',
+          'E122','E127','E128','E222','E272','E241','E266','E226','E704',
+          'D100','D101','D102','D103','D104','D400','D401','D202',
+          'N806','N802','N803','N801',
+          'I100','W503']
+# (e.g. 'E4','W') default: 'E121','E123','126','226','E24','704'
+#select =
+#select = ['E','W','F','N','I']
+output-file = '.tox/lint/flake8out.txt'
+count = true
+#show-pep8,
+#show-source
+#verbose
+#quiet
+
+#
+# Configuration(s) for tox
+#
+
+[tool.tox]  # 
+env_list = [{replace='ref',of=['tool','tox','labels','py'],extend=true}, 'lint', 'docs']
+min_version = '4.24.1'
+skip_missing_interpreters = true
+requires = [
+    {replace='ref',of=['tool','tox','_','base','deps'],extend=true},
+    'virtualenv>=20.29.1',
+    'tox-backtick>=0.5.7',
+]
+[tool.tox.labels]
+py = ['py39','py310','py311','py312','py313', 'pypy39','pypy310']
+prepare  = ['prepare']
+coverage = ['coverage']
+lint = ['lint']
+docs = ['docs']
+build  = [{replace='ref',of=['tool','tox','labels','py'],extend=true}, 'docs', 'build']
+deploy = [{replace='ref',of=['tool','tox','labels','build'],extend=true}, 'publish']
+
+[tool.tox._.base]
+base_python = ['python3.12']
+deps = [
+    'pip>=25.0.1',
+    'setuptools>=75.8.0',
+]
+package_subdir = 'pyc_wheel'
+
+[tool.tox.env_run_base]
+description = "Run tests under {base_python}"
+set_env.PYTHONDONTWRITEBYTECODE = '1'
+set_env.PKG_PVER = "`python -W ignore -c \"import platform ; print(''.join(platform.python_version_tuple()[:2]), end='')\" 2> nul`"
+set_env.PKG_NAME = "`python -W ignore -c \"import setuptools ; setuptools._distutils.core._setup_stop_after='config' ; print(setuptools.setup().metadata.get_name(),     end='')\" 2> nul`"
+set_env.PKG_DIST = "`python -W ignore -c \"import setuptools ; setuptools._distutils.core._setup_stop_after='config' ; print(setuptools.setup().metadata.get_fullname(), end='')\" 2> nul`"
+commands = [
+    ['{env_python}','--version'],
+    ['{env_python}','-m','tests',{replace='posargs',extend=true}],
+]
+extras = ['test']
+deps = [
+    {replace='ref',of=['tool','tox','_','base','deps'],extend=true},
+]
+
+[tool.tox.env.'prepare']
+base_python = {replace='ref',of=['tool','tox','_','base','base_python']}
+skip_install = true
+allowlist_externals = [
+    'cmd',
+    '.build',
+]
+commands = [
+    ['cmd','/C','if','exist','.build.cmd','.build.cmd'],
+]
+extras = []
+deps = []
+
+[tool.tox.env.'coverage']
+base_python = {replace='ref',of=['tool','tox','_','base','base_python']}
+commands = [
+    ['{env_python}','-m','coverage','erase'],
+    ['-','{env_python}','-m','coverage','run','-m','tests',{replace="posargs",extend=true}],
+    ['-','{env_python}','-m','coverage','html'],
+    ['{env_python}','-m','coverage','report'],
+]
+deps = [
+    {replace='ref',of=['tool','tox','env_run_base','deps'],extend=true},
+    'coverage>=7.6.10',
+    'covdefaults>=2.3.0',
+    'diff-cover>=9.2.0',
+]
+
+[tool.tox.env.'docs']
+base_python = {replace='ref',of=['tool','tox','_','base','base_python']}
+commands = [
+    ['{env_python}','-m','sphinxlint','--ignore','.tox','--ignore','build','--ignore','dist'],
+   #['{env_python}','-m','sphinx.apidoc','-f','{envsitepackagesdir}/{[tool.tox._.base]package_subdir}'],
+    ['{env_python}','-m','sphinx.cmd.build','-W','-a','-b','html','-E','./docs','./build/docs/html'],
+    ['{env_python}','-m','sphinx.cmd.build','-W','-a','-b','linkcheck','./docs','./build/docs/html'],
+    ['{env_python}','-m','sphinx.cmd.build','-W','-a','-b','doctest',  './docs','./build/docs/html'],
+]
+extras = ['doc']
+deps = [
+    {replace='ref',of=['tool','tox','_','base','deps'],extend=true},
+]
+
+[tool.tox.env.'build']
+depends = [{replace='ref',of=['tool','tox','labels','py'],extend=true}, 'docs']
+base_python = {replace='ref',of=['tool','tox','_','base','base_python']}
+commands = [
+    ['{env_python}','-W','ignore','-c','from setuptools import setup ; setup()','--quiet','sdist','--formats=gztar'],
+    ['{env_python}','-W','ignore','-c','from setuptools import setup ; setup()','--quiet','bdist_wheel'],
+    # check out for PyPi
+    ['{env_python}','-m','twine','check','dist/*'],
+]
+deps = [
+    {replace='ref',of=['tool','tox','env_run_base','deps'],extend=true},
+    'twine>=6.1.0',
+]
+
+[tool.tox.env.'publish']
+depends = ['build']
+base_python = {replace='ref',of=['tool','tox','_','base','base_python']}
+skip_install = true
+commands = [
+    # publish on PyPi
+    ['{env_python}','-m','twine','upload','dist/*'],
+]
+extras = []
+deps = [
+    'twine>=6.1.0',
+]
+
+[tool.tox.env.'lint']
+base_python = {replace='ref',of=['tool','tox','_','base','base_python']}
+commands = [
+    ['{env_python}','-m','flake8','{envsitepackagesdir}/{[tool.tox._.base]package_subdir}/'],
+]
+extras = []
+deps = [
+    {replace='ref',of=['tool','tox','env_run_base','deps'],extend=true},
+    'flake8>=7.1.1',
+    'flake8-pyproject>=1.2.3',
+    'flake8-docstrings>=1.7.0',
+    'pep8-naming>=0.14.1',
+    'flake8-builtins>=2.5.0',
+    'flake8-deprecated>=2.2.1',
+]

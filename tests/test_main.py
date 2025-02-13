@@ -1,6 +1,5 @@
-# Copyright (c) 2019-2021 Adam Karpierz
-# Licensed under the MIT License
-# https://opensource.org/licenses/MIT
+# Copyright (c) 2019 Adam Karpierz
+# SPDX-License-Identifier: MIT
 
 import unittest
 
@@ -11,4 +10,7 @@ from pyc_wheel import main
 class MainTestCase(unittest.TestCase):
 
     def setUp(self):
+        pass
+
+    def test_main(self):
         pass

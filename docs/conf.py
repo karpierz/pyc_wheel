@@ -4,29 +4,7 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-import re
-from pathlib import Path
-from setuptools.config import read_configuration
-from packaging import version
-
-top_dir = Path(__file__).resolve().parents[1]
-metadata = read_configuration(top_dir/"setup.cfg",
-                              ignore_option_errors=True)["metadata"]
-copyr_patt = r"^\s*__copyright__\s*=\s*"
-class about:
-    __title__      = metadata["name"]
-    __summary__    = metadata.get("description")
-    __uri__        = metadata.get("url")
-    __version__    = str(version.parse(metadata["version"]))
-    __author__     = metadata.get("author")
-    __maintainer__ = metadata.get("maintainer")
-    __email__      = metadata.get("author_email")
-    __license__    = metadata.get("license")
-    __copyright__  = eval(next((re.split(copyr_patt, line)[1] for line in
-                                next(top_dir.glob("src/**/__about__.py"))
-                                .open("rt", encoding="utf-8")
-                                if re.split(copyr_patt, line)[1:]), "None"))
-del read_configuration, version, metadata, copyr_patt
+__import__("pkg_about").about_from_setup()
 
 def setup(app):
     pass
@@ -56,7 +34,7 @@ release = about.__version__
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
-needs_sphinx = '3.4.3'
+needs_sphinx = '7.4.7'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -70,8 +48,12 @@ extensions = [
    #'sphinx.ext.coverage',
     'sphinx.ext.ifconfig',
     'sphinx.ext.napoleon',
+    'sphinx_autodoc_typehints',
+   #'sphinx_toolbox',
     'sphinx_tabs.tabs',
+    'sphinx_copybutton',
     'sphinxcontrib.spelling',
+    'nbsphinx',
 ]
 
 # Needed for e.g. linkcheck builder
