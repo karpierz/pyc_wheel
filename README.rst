@@ -24,12 +24,19 @@ Processing the wheel in place:
     $ python -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl
     # Output: your_wheel-1.0.0-py3-none-any.whl
 
+or renaming for the python version:
+
+.. code-block:: bash
+
+    $ python3.12 -m pyc_wheel --rename your_wheel-1.0.0-py3-none-any.whl
+    # Output: your_wheel-1.0.0-cp312-none-any.whl
+
 or with backup:
 
 .. code-block:: bash
 
-    $ python -m pyc_wheel --with_backup your_wheel-1.0.0-py3-none-any.whl
-    # Output: your_wheel-1.0.0-py3-none-any.whl
+    $ python3.12 -m pyc_wheel --rename --with-backup your_wheel-1.0.0-py3-none-any.whl
+    # Output: your_wheel-1.0.0-cp312-none-any.whl
     #         your_wheel-1.0.0-py3-none-any.whl.bak
 
 or with quiet:
