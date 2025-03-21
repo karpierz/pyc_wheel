@@ -58,11 +58,17 @@ def create_pyc_whl_path(source_whl: pathlib.Path) -> pathlib.Path:
     return pyc_whl
 
 
-def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=False, optimize=0):
+def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=False, quiet=False, optimize=0):
     """Generate a new whl with only pyc files."""
 
     if whl_file.suffix != ".whl":
         raise TypeError("File to convert must be a *.whl")
+
+    if rename == "symlink" and not hasattr(os, "symlink"):
+        raise NotImplementedError("symlinks are not supported on this platform")
+
+    if not isinstance(rename, bool) and rename != "symlink":
+        raise ValueError("rename must be a boolean or 'symlink'")
 
     if exclude: exclude = re.compile(exclude)
 
@@ -125,7 +131,19 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, quiet=Fals
         shutil.make_archive(whl_dir, "zip", root_dir=whl_dir)
         if with_backup:
             whl_file.replace(whl_file.with_suffix(whl_file.suffix + ".bak"))
-        shutil.move(str(whl_file_zip), str(create_pyc_whl_path(whl_file)))
+        if rename:
+            pyc_whl_path = create_pyc_whl_path(whl_file)
+            whl_file_zip.replace(pyc_whl_path)
+            if whl_file != pyc_whl_path:
+                whl_file.unlink(missing_ok=True)
+                if rename == "symlink":
+                    whl_file.symlink_to(pyc_whl_path)
+                if not quiet:
+                    print("Renamed wheel: {!s} -> {!s}".format(whl_file, pyc_whl_path))
+            whl_file = pyc_whl_path
+        else:
+            whl_file_zip.replace(whl_file)
+        return whl_file
     finally:
         # Clean up original directory
         shutil.rmtree(whl_dir, ignore_errors=True)
@@ -239,8 +257,14 @@ def main(argv=sys.argv[1:]):
                         help="skip files matching the regular expression; "
                              "the regexp is searched for in the full path "
                              "of each file considered for compilation")
-    parser.add_argument("--with_backup", default=False, action="store_true",
+    parser.add_argument("--with_backup", "--with-backup", default=False, action="store_true",
                         help="Indicates whether the backup will be created.")
+    rename_group = parser.add_mutually_exclusive_group()
+    rename_group.add_argument("--rename", default=False, action="store_true",
+                              help="Rename the wheel to python version.")
+    if hasattr(os, "symlink"):
+        rename_group.add_argument("--symlink", dest="rename", action="store_const", const="symlink",
+                                  help="Rename the wheel to python version and symlink old name to new.")
     parser.add_argument("--optimize", default=0, type=int, choices=[0, 1, 2],
                         help="Specifies the optimization level of the compiler."
                              "Explicit levels are 0 (no optimization; __debug__ is true),"
@@ -261,4 +285,5 @@ def main(argv=sys.argv[1:]):
 
     for whl_file in glob.iglob(args.whl_file):
         convert_wheel(Path(whl_file), exclude=args.exclude,
-                      with_backup=args.with_backup, quiet=args.quiet, optimize=args.optimize)
+                      with_backup=args.with_backup, rename=args.rename,
+                      quiet=args.quiet, optimize=args.optimize)
