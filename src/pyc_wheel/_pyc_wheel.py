@@ -58,7 +58,8 @@ def create_pyc_whl_path(source_whl: pathlib.Path) -> pathlib.Path:
     return pyc_whl
 
 
-def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=False, quiet=False, optimize=0):
+def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=False,
+                  quiet=False, optimize=0):
     """Generate a new whl with only pyc files."""
 
     if whl_file.suffix != ".whl":
@@ -211,16 +212,16 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
             tag_components[0] = create_python_tag()
             pyc_tag = "-".join(tag_components)
             break
-        # if (python_tag == f"cp{py_major_version}{py_minor_version}"
-        #    and py_implementation == "CPython"):
-        #     tag_components[0] = create_python_tag()
-        #     pyc_tag = "-".join(tag_components)
-        #     break
-        # if (python_tag == f"pp{py_major_version}{py_minor_version}"
-        #    and py_implementation == "PyPy"):
-        #     tag_components[0] = create_python_tag()
-        #     pyc_tag = "-".join(tag_components)
-        #     break
+        if (python_tag == f"cp{py_major_version}{py_minor_version}"
+           and py_implementation == "CPython"):
+            tag_components[0] = create_python_tag()
+            pyc_tag = "-".join(tag_components)
+            break
+        if (python_tag == f"pp{py_major_version}{py_minor_version}"
+           and py_implementation == "PyPy"):
+            tag_components[0] = create_python_tag()
+            pyc_tag = "-".join(tag_components)
+            break
 
     if pyc_tag is None:
         raise RuntimeError("Cannot convert wheel with the used interpreter.")
@@ -263,8 +264,10 @@ def main(argv=sys.argv[1:]):
     rename_group.add_argument("--rename", default=False, action="store_true",
                               help="Rename the wheel to python version.")
     if hasattr(os, "symlink"):
-        rename_group.add_argument("--symlink", dest="rename", action="store_const", const="symlink",
-                                  help="Rename the wheel to python version and symlink old name to new.")
+        rename_group.add_argument("--symlink", dest="rename", action="store_const",
+                                  const="symlink",
+                                  help="Rename the wheel to python version and symlink "
+                                       "old name to new.")
     parser.add_argument("--optimize", default=0, type=int, choices=[0, 1, 2],
                         help="Specifies the optimization level of the compiler."
                              "Explicit levels are 0 (no optimization; __debug__ is true),"
