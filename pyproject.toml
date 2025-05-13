@@ -3,18 +3,12 @@
 
 [build-system]
 build-backend = 'setuptools.build_meta'
-requires = ['setuptools>=75.8.0', 'packaging>=24.2.0', 'tox>=4.24.1']
+requires = ['setuptools>=80.3.1', 'packaging>=25.0.0', 'tox>=4.25.0']
 
 [project]
 name        = 'pyc_wheel'
-version     = '1.3.0'
+version     = '1.3.2'
 description = 'Compile all py files in a wheel to pyc files.'
-urls.Homepage      = 'https://pypi.org/project/pyc_wheel/'
-urls.Documentation = 'https://pyc-wheel.readthedocs.io/'
-urls.Download      = 'https://pypi.org/project/pyc_wheel/'
-urls.Source        = 'https://github.com/karpierz/pyc_wheel'
-urls.Issues        = 'https://github.com/karpierz/pyc_wheel/issues'
-license = { text = 'MIT License ; https://opensource.org/license/mit' }
 authors = [
     { name  = 'Grant Patten, Adam Karpierz' },
     { email = 'adam@karpierz.net' },
@@ -23,48 +17,54 @@ maintainers = [
     { name  = 'Adam Karpierz' },
     { email = 'adam@karpierz.net' },
 ]
+license = 'MIT'
+license-files = ['LICENSE']
+urls.Homepage      = 'https://pypi.org/project/pyc_wheel/'
+urls.Documentation = 'https://pyc-wheel.readthedocs.io/'
+urls.Download      = 'https://pypi.org/project/pyc_wheel/'
+urls.Source        = 'https://github.com/karpierz/pyc_wheel'
+urls.Issues        = 'https://github.com/karpierz/pyc_wheel/issues'
 keywords = ['pyc_wheel', 'pycwheel', 'wheel', 'pyc', 'compile']
 classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
-    'License :: OSI Approved :: MIT License',
     'Operating System :: OS Independent',
     'Natural Language :: Polish',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
     'Programming Language :: Python :: 3 :: Only',
     'Programming Language :: Python :: Implementation :: CPython',
     'Programming Language :: Python :: Implementation :: PyPy',
     'Topic :: Software Development :: Libraries :: Python Modules',
     'Topic :: Utilities',
 ]
-requires-python = '>=3.9.0,<4.0.0'
+requires-python = '>=3.10.0,<4.0.0'
 dependencies = [
     # mandatory
-    'setuptools>=75.8.0',
-    'pkg-about>=1.2.8',
+    'setuptools>=80.3.1',
+    'pkg-about>=1.3.3',
     # others
 ]
 dynamic = ['readme']
 optional-dependencies.'doc' = [
-    'Sphinx>=7.4.7',
-    'sphinx-autodoc-typehints>=2.3.0',
-    'sphinx-toolbox>=3.8.1',
+    'Sphinx>=8.1.3',
+    'sphinx-autodoc-typehints>=3.0.1',
+    'sphinx-toolbox>=3.10.0',
     'sphinx-tabs>=3.4.5', # don't touch! sphinx-toolbox requires <3.4.7
     'sphinx-copybutton>=0.5.2',
-    'sphinxcontrib-spelling>=8.0.0',
+    'sphinxcontrib-spelling>=8.0.1',
     'sphinx-lint>=1.0.0',
     'restructuredtext-lint>=1.4.0',
-    'nbsphinx>=0.9.6',
+    'nbsphinx>=0.9.7',
 ]
 optional-dependencies.'test' = [
-    'deepdiff>=8.1.1',
-    'rich>=13.9.4',
+    'deepdiff>=8.4.2',
+    'rich>=14.0.0',
 ]
 
 [project.scripts]
@@ -80,7 +80,6 @@ optional-dependencies.'test' = [
 readme = { file = ['README.rst', 'CHANGES.rst'], content-type = 'text/x-rst; charset=UTF-8' }
 
 [tool.setuptools]
-license-files = ['LICENSE']
 include-package-data = true
 platforms = ['any']
 zip-safe = true
@@ -155,17 +154,17 @@ count = true
 # Configuration(s) for tox
 #
 
-[tool.tox]  # 
+[tool.tox]
 env_list = [{replace='ref',of=['tool','tox','labels','py'],extend=true}, 'lint', 'docs']
-min_version = '4.24.1'
+min_version = '4.25.0'
 skip_missing_interpreters = true
 requires = [
     {replace='ref',of=['tool','tox','_','base','deps'],extend=true},
-    'virtualenv>=20.29.1',
-    'tox-backtick>=0.5.7',
+    'virtualenv>=20.31.2',
+    'tox-backtick>=0.6.1',
 ]
 [tool.tox.labels]
-py = ['py39','py310','py311','py312','py313', 'pypy39','pypy310']
+py = ['py310','py311','py312','py313','py314', 'pypy310','pypy311']
 prepare  = ['prepare']
 coverage = ['coverage']
 lint = ['lint']
@@ -174,10 +173,10 @@ build  = [{replace='ref',of=['tool','tox','labels','py'],extend=true}, 'docs', '
 deploy = [{replace='ref',of=['tool','tox','labels','build'],extend=true}, 'publish']
 
 [tool.tox._.base]
-base_python = ['python3.12']
+base_python = ['python3.13']
 deps = [
-    'pip>=25.0.1',
-    'setuptools>=75.8.0',
+    'pip>=25.1.1',
+    'setuptools>=80.3.1',
 ]
 package_subdir = 'pyc_wheel'
 
@@ -219,9 +218,9 @@ commands = [
 ]
 deps = [
     {replace='ref',of=['tool','tox','env_run_base','deps'],extend=true},
-    'coverage>=7.6.10',
+    'coverage>=7.8.0',
     'covdefaults>=2.3.0',
-    'diff-cover>=9.2.0',
+    'diff-cover>=9.2.4',
 ]
 
 [tool.tox.env.'docs']
@@ -273,10 +272,10 @@ commands = [
 extras = []
 deps = [
     {replace='ref',of=['tool','tox','env_run_base','deps'],extend=true},
-    'flake8>=7.1.1',
+    'flake8>=7.2.0',
     'flake8-pyproject>=1.2.3',
     'flake8-docstrings>=1.7.0',
-    'pep8-naming>=0.14.1',
+    'pep8-naming>=0.15.1',
     'flake8-builtins>=2.5.0',
     'flake8-deprecated>=2.2.1',
 ]

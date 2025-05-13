@@ -1,6 +1,23 @@
 Changelog
 =========
 
+1.3.2 (2025-05-10)
+------------------
+- Add support for Python 3.14
+- Drop support for Python 3.9 (due to compatibility issues).
+- Add support for PyPy 3.11
+- Drop support for PyPy 3.9
+- `Add --rename and --symlink options.
+  <https://github.com/karpierz/pyc_wheel/pull/20>`_
+- `Fix for a bug <https://github.com/karpierz/pyc_wheel/issues/21>`_
+- `Fix for a bug when wheel tag rewrite processed incorrectly
+  <https://github.com/karpierz/pyc_wheel/issues/19>`_
+- `Fix links in README.rst
+  <https://github.com/karpierz/pyc_wheel/pull/15>`_
+- Update readthedocs's python to version 3.13
+- Update tox's base_python to version 3.13
+- Setup (dependencies) update.
+
 1.3.0 (2025-02-10)
 ------------------
 - Add support for Python 3.10, 3.11, 3.12 and 3.13
