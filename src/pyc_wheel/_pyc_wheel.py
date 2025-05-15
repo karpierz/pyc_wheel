@@ -248,10 +248,11 @@ def _b64encode(data):
     return base64.urlsafe_b64encode(data).rstrip(b"=").decode("utf-8")
 
 
-def main(argv=sys.argv[1:]):
+def main(argv=sys.argv[1:]) -> int:
     """Compile all py files in a wheel"""
     from argparse import ArgumentParser
-    parser = ArgumentParser(description=main.__doc__)
+    app_name = __package__
+    parser = ArgumentParser(prog=f"python -m {app_name}", description=main.__doc__)
     parser.add_argument("whl_file",
                         help="Path (can contain wildcards) to whl(s) to convert")
     parser.add_argument("--exclude", default=None,
@@ -290,3 +291,4 @@ def main(argv=sys.argv[1:]):
         convert_wheel(Path(whl_file), exclude=args.exclude,
                       with_backup=args.with_backup, rename=args.rename,
                       quiet=args.quiet, optimize=args.optimize)
+    return 0

@@ -3,11 +3,11 @@
 
 [build-system]
 build-backend = 'setuptools.build_meta'
-requires = ['setuptools>=80.3.1', 'packaging>=25.0.0', 'tox>=4.25.0']
+requires = ['setuptools>=80.7.1', 'packaging>=25.0.0', 'tox>=4.26.0']
 
 [project]
 name        = 'pyc_wheel'
-version     = '1.3.2'
+version     = '1.3.3'
 description = 'Compile all py files in a wheel to pyc files.'
 authors = [
     { name  = 'Grant Patten, Adam Karpierz' },
@@ -46,15 +46,15 @@ classifiers = [
 requires-python = '>=3.10.0,<4.0.0'
 dependencies = [
     # mandatory
-    'setuptools>=80.3.1',
-    'pkg-about>=1.3.3',
+    'setuptools>=80.7.1',
+    'pkg-about>=1.3.4',
     # others
 ]
 dynamic = ['readme']
 optional-dependencies.'doc' = [
     'Sphinx>=8.1.3',
     'sphinx-autodoc-typehints>=3.0.1',
-    'sphinx-toolbox>=3.10.0',
+    'sphinx-toolbox>=4.0.0',
     'sphinx-tabs>=3.4.5', # don't touch! sphinx-toolbox requires <3.4.7
     'sphinx-copybutton>=0.5.2',
     'sphinxcontrib-spelling>=8.0.1',
@@ -63,7 +63,7 @@ optional-dependencies.'doc' = [
     'nbsphinx>=0.9.7',
 ]
 optional-dependencies.'test' = [
-    'deepdiff>=8.4.2',
+    'deepdiff>=8.5.0',
     'rich>=14.0.0',
 ]
 
@@ -156,12 +156,12 @@ count = true
 
 [tool.tox]
 env_list = [{replace='ref',of=['tool','tox','labels','py'],extend=true}, 'lint', 'docs']
-min_version = '4.25.0'
+min_version = '4.26.0'
 skip_missing_interpreters = true
 requires = [
     {replace='ref',of=['tool','tox','_','base','deps'],extend=true},
     'virtualenv>=20.31.2',
-    'tox-backtick>=0.6.1',
+    'tox-backtick>=0.6.2',
 ]
 [tool.tox.labels]
 py = ['py310','py311','py312','py313','py314', 'pypy310','pypy311']
@@ -176,7 +176,7 @@ deploy = [{replace='ref',of=['tool','tox','labels','build'],extend=true}, 'publi
 base_python = ['python3.13']
 deps = [
     'pip>=25.1.1',
-    'setuptools>=80.3.1',
+    'setuptools>=80.7.1',
 ]
 package_subdir = 'pyc_wheel'
 

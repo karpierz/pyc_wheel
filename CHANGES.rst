@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.3.3 (2025-05-15)
+------------------
+- Setup (dependencies) update (due to regressions in tox and setuptools).
+
 1.3.2 (2025-05-10)
 ------------------
 - Add support for Python 3.14
