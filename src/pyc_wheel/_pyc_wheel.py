@@ -115,12 +115,12 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=Fal
             timestamp = datetime(*member.date_time).timestamp()
             try:
                 os.utime(file_path, (timestamp, timestamp))
-            except Exception:
+            except Exception:  # pragma: no cover
                 pass  # ignore errors
             permission_bits = (member.external_attr >> 16) & 0o777
             try:
                 os.chmod(file_path, permission_bits)
-            except Exception:
+            except Exception:  # pragma: no cover
                 pass  # ignore errors
 
         dist_info_path = whl_path/"{}.dist-info".format(dist_info)
