@@ -38,13 +38,12 @@ py_minor_version = platform.python_version_tuple()[1]
 def create_python_tag() -> str:
     # The Python tag indicates the implementation and version required by a distribution, see:
     # https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/#python-tag
-    if py_implementation == "CPython":
+    if py_implementation.lower() == "cpython":
         py_impl_abbrev = "cp"
-    elif py_implementation == "PyPy":
+    elif py_implementation.lower() == "pypy":  # pragma: no cover
         py_impl_abbrev = "pp"
     else:
         raise NotImplementedError("Python implementation currently not supported!")
-
     return f"{py_impl_abbrev}{py_major_version}{py_minor_version}"
 
 
@@ -68,45 +67,42 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=Fal
     if rename == "symlink" and not hasattr(os, "symlink"):
         raise NotImplementedError("symlinks are not supported on this platform")
 
-    if not isinstance(rename, bool) and rename != "symlink":
+    if not isinstance(rename, bool) and rename != "symlink":  # pragma: no cover
         raise ValueError("rename must be a boolean or 'symlink'")
 
     if exclude: exclude = re.compile(exclude)
 
     dist_info = "-".join(whl_file.stem.split("-")[:-3])
 
-    whl_dir  = tempfile.mkdtemp()
-    whl_path = Path(whl_dir)
-
+    whl_path = Path(tempfile.mkdtemp())
     try:
         # Extract our zip file temporarily
         with zipfile.ZipFile(str(whl_file), "r") as whl_zip:
-            whl_zip.extractall(whl_dir)
+            whl_zip.extractall(whl_path)
             members = [member for member in whl_zip.infolist()
                        if member.is_dir() or not member.filename.endswith(".py")]
 
         # Compile all py files
-        if not compileall.compile_dir(whl_dir, rx=exclude,
-                                      ddir="<{}>".format(dist_info),
+        if not compileall.compile_dir(whl_path, rx=exclude,
+                                      ddir=f"<{dist_info}>",
                                       quiet=int(quiet), force=True, legacy=True,
                                       optimize=optimize):
-            raise RuntimeError("Error compiling Python sources in wheel "
-                               "{!s}".format(whl_file.name))
+            raise RuntimeError(f"Error compiling Python sources in wheel {whl_file.name}")
 
         # Remove all original py files
         for py_file in whl_path.glob("**/*.py"):
-            if py_file.is_file():
+            if py_file.is_file():  # pragma: no branch
                 if exclude is None or not exclude.search(str(py_file)):
-                    if not quiet: print("Deleting py file: {!s}".format(py_file))
+                    if not quiet: print(f"Deleting py file: {py_file}")
                     py_file.chmod(stat.S_IWUSR)
                     py_file.unlink()
-
-        for root, dirs, files in os.walk(whl_dir):
+        # To be sure
+        for root, dirs, files in os.walk(whl_path):
             for fname in files:
-                if fname.endswith(".py"):
+                if fname.endswith(".py"):  # pragma: no cover
                     py_file = Path(root)/fname
                     if exclude is None or not exclude.search(str(py_file)):
-                        if not quiet: print("Removing file: {!s}".format(py_file))
+                        if not quiet: print(f"Removing file: {py_file}")
                         py_file.chmod(stat.S_IWUSR)
                         py_file.unlink()
 
@@ -123,31 +119,31 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=Fal
             except Exception:  # pragma: no cover
                 pass  # ignore errors
 
-        dist_info_path = whl_path/"{}.dist-info".format(dist_info)
+        dist_info_path = whl_path/f"{dist_info}.dist-info"
         rewrite_dist_info(dist_info_path, exclude=exclude)
 
         # Rezip the file with the new version info
         whl_file_zip = whl_path.with_suffix(".zip")
         if whl_file_zip.exists(): whl_file_zip.unlink()
-        shutil.make_archive(whl_dir, "zip", root_dir=whl_dir)
+        shutil.make_archive(str(whl_path), "zip", root_dir=str(whl_path))
         if with_backup:
             whl_file.replace(whl_file.with_suffix(whl_file.suffix + ".bak"))
         if rename:
             pyc_whl_path = create_pyc_whl_path(whl_file)
             shutil.move(whl_file_zip, pyc_whl_path)
-            if whl_file != pyc_whl_path:
+            if whl_file != pyc_whl_path:  # pragma: no branch
                 whl_file.unlink(missing_ok=True)
                 if rename == "symlink":
                     whl_file.symlink_to(pyc_whl_path)
-                if not quiet:
-                    print("Renamed wheel: {!s} -> {!s}".format(whl_file, pyc_whl_path))
+                if not quiet: print("Renamed wheel: "
+                                    f"{whl_file} -> {pyc_whl_path}")
             whl_file = pyc_whl_path
         else:
             shutil.move(whl_file_zip, whl_file)
         return whl_file
     finally:
         # Clean up original directory
-        shutil.rmtree(whl_dir, ignore_errors=True)
+        shutil.rmtree(str(whl_path), ignore_errors=True)
 
 
 def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
@@ -180,8 +176,7 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
                     with pyc_path.open("rb") as f:
                         data = f.read()
                     file_hash = HASH_ALGORITHM(data)
-                    file_hash = "{}={}".format(file_hash.name,
-                                               _b64encode(file_hash.digest()))
+                    file_hash = f"{file_hash.name}={_b64encode(file_hash.digest())}"
                     file_len  = len(data)
             record_data.append((file_dest, file_hash, file_len))
 
@@ -197,12 +192,11 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
     with wheel_path.open("r") as wheel:
         wheel_data = wheel.readlines()
 
-    tags = [line.split(" ")[1].strip()
-            for line in wheel_data if line.startswith("Tag: ")]
+    tags = [tag for line in wheel_data
+            if line.startswith("Tag: ") and (tag := line.split(" ")[1].strip())]
     if not tags:
-        raise RuntimeError("No tags present in {}/{}; cannot determine target"
-                           " wheel filename".format(wheel_path.parent.name,
-                                                    wheel_path.name))
+        raise RuntimeError(f"No tags present in {wheel_path.parent.name}/{wheel_path.name}; "
+                           "cannot determine target wheel filename")
     # Reassemble the tag for the wheel file
     pyc_tag = None
     for tag in tags:
@@ -213,12 +207,12 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
             pyc_tag = "-".join(tag_components)
             break
         if (python_tag == f"cp{py_major_version}{py_minor_version}"
-           and py_implementation == "CPython"):
+           and py_implementation.lower() == "cpython"):
             tag_components[0] = create_python_tag()
             pyc_tag = "-".join(tag_components)
             break
-        if (python_tag == f"pp{py_major_version}{py_minor_version}"
-           and py_implementation == "PyPy"):
+        if (python_tag == f"pp{py_major_version}{py_minor_version}"  # pragma: no cover
+           and py_implementation.lower() == "pypy"):
             tag_components[0] = create_python_tag()
             pyc_tag = "-".join(tag_components)
             break
@@ -234,7 +228,7 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
                 wheel.write(line)
 
 
-def _get_platform():
+def _get_platform():  # pragma: no cover # not used for now
     """Return our platform name 'win32', 'linux_x86_64'"""
     result = distutils.util.get_platform().replace(".", "_").replace("-", "_")
     if result == "linux_x86_64" and sys.maxsize == 2147483647:
@@ -264,7 +258,7 @@ def main(argv=sys.argv[1:]) -> int:
     rename_group = parser.add_mutually_exclusive_group()
     rename_group.add_argument("--rename", default=False, action="store_true",
                               help="Rename the wheel to python version.")
-    if hasattr(os, "symlink"):
+    if hasattr(os, "symlink"):  # pragma: no branch
         rename_group.add_argument("--symlink", dest="rename", action="store_const",
                                   const="symlink",
                                   help="Rename the wheel to python version and symlink "

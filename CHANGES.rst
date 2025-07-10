@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.3.6 (2025-07-07)
+------------------
+- Unittests have been added.
+- 100% code coverage.
+- A few minor code improvements.
+- Setup (dependencies) update.
+
 1.3.5 (2025-06-11)
 ------------------
 - Setup (dependencies) update.
