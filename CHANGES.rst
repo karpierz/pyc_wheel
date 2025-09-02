@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.0 (2025-09-01)
+------------------
+- Making the package typed.
+- Setup (dependencies) update.
+
 1.3.6 (2025-07-07)
 ------------------
 - Unittests have been added.

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 """Compile all py files in a wheel to pyc files."""
-import pathlib
+
 import platform
 import sys
 import os
@@ -47,7 +47,7 @@ def create_python_tag() -> str:
     return f"{py_impl_abbrev}{py_major_version}{py_minor_version}"
 
 
-def create_pyc_whl_path(source_whl: pathlib.Path) -> pathlib.Path:
+def create_pyc_whl_path(source_whl: Path) -> Path:
     source_whl_name = source_whl.name
     # {version}(-{build tag})?-{python tag}-{abitag}-{platform tag} -> list
     tags = source_whl_name.split("-")
@@ -57,8 +57,10 @@ def create_pyc_whl_path(source_whl: pathlib.Path) -> pathlib.Path:
     return pyc_whl
 
 
-def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=False,
-                  quiet=False, optimize=0):
+def convert_wheel(whl_file: Path, *,
+                  exclude: re.Pattern[str] | str | None = None,
+                  with_backup: bool = False, rename: str | bool = False,
+                  quiet: bool = False, optimize: int = 0) -> Path:
     """Generate a new whl with only pyc files."""
 
     if whl_file.suffix != ".whl":
@@ -70,7 +72,7 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=Fal
     if not isinstance(rename, bool) and rename != "symlink":  # pragma: no cover
         raise ValueError("rename must be a boolean or 'symlink'")
 
-    if exclude: exclude = re.compile(exclude)
+    if isinstance(exclude, str): exclude = re.compile(exclude) if exclude else None
 
     dist_info = "-".join(whl_file.stem.split("-")[:-3])
 
@@ -146,10 +148,13 @@ def convert_wheel(whl_file: Path, *, exclude=None, with_backup=False, rename=Fal
         shutil.rmtree(str(whl_path), ignore_errors=True)
 
 
-def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
+def rewrite_dist_info(dist_info_path: Path, *,
+                      exclude: re.Pattern[str] | str | None = None) -> None:
     """Rewrite the record file with pyc files instead of py files."""
 
     whl_path = dist_info_path.resolve().parent
+
+    if isinstance(exclude, str): exclude = re.compile(exclude) if exclude else None
 
     # Rewrite the record file with pyc files instead of py files.
 
@@ -162,22 +167,22 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
             if file_dest.endswith(".py"):
                 # Do not keep py files, replace with pyc files
                 if exclude is None or not exclude.search(file_dest):
-                    file_dest = Path(file_dest)
+                    fpath_dest = Path(file_dest)
                     # pyc_fname = "{}.{}-{}{}.pyc".format(
-                    #             file_dest.stem,
+                    #             fpath_dest.stem,
                     #             platform.python_implementation().lower(),
                     #             sys.version_info.major,
                     #             sys.version_info.minor)
-                    # pyc_file = file_dest.parent/"__pycache__"/pyc_fname
-                    pyc_file = file_dest.with_suffix(".pyc")
+                    # pyc_file = fpath_dest.parent/"__pycache__"/pyc_fname
+                    pyc_file = fpath_dest.with_suffix(".pyc")
                     file_dest = str(pyc_file)
 
                     pyc_path = whl_path/pyc_file
                     with pyc_path.open("rb") as f:
                         data = f.read()
-                    file_hash = HASH_ALGORITHM(data)
-                    file_hash = f"{file_hash.name}={_b64encode(file_hash.digest())}"
-                    file_len  = len(data)
+                    hash_obj = HASH_ALGORITHM(data)
+                    file_hash = f"{hash_obj.name}={_b64encode(hash_obj.digest())}"
+                    file_len  = str(len(data))
             record_data.append((file_dest, file_hash, file_len))
 
     with record_path.open("w", newline="\n") as record:
@@ -228,21 +233,22 @@ def rewrite_dist_info(dist_info_path: Path, *, exclude=None):
                 wheel.write(line)
 
 
-def _get_platform():  # pragma: no cover # not used for now
+def _get_platform() -> str:  # pragma: no cover # not used for now
     """Return our platform name 'win32', 'linux_x86_64'"""
-    result = distutils.util.get_platform().replace(".", "_").replace("-", "_")
+    get_platform = distutils.util.get_platform  # type: ignore[attr-defined]
+    result: str = get_platform().replace(".", "_").replace("-", "_")
     if result == "linux_x86_64" and sys.maxsize == 2147483647:
         # pip pull request #3497
         result = "linux_i686"
     return result
 
 
-def _b64encode(data):
+def _b64encode(data: bytes) -> str:
     """urlsafe_b64encode without padding"""
     return base64.urlsafe_b64encode(data).rstrip(b"=").decode("utf-8")
 
 
-def main(argv=sys.argv[1:]) -> int:
+def main(argv: list[str] = sys.argv[1:]) -> int:
     """Compile all py files in a wheel"""
     from argparse import ArgumentParser
     app_name = __package__
