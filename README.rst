@@ -126,7 +126,7 @@ Authors
 
 .. |package| replace:: pyc_wheel
 .. |package_bold| replace:: **pyc_wheel**
-.. |copyright| replace:: Copyright (c) 2019-2025 Adam Karpierz
+.. |copyright| replace:: Copyright (c) 2019-2026 Adam Karpierz
 .. |respository| replace:: https://github.com/karpierz/pyc_wheel.git
 .. _Development page: https://github.com/karpierz/pyc_wheel
 .. _PyPI record: https://pypi.org/project/pyc_wheel/

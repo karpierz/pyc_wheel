@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.0.8 (2025-11-30)
+------------------
+- Mark the package as typed.
+- Copyright year update.
+- Add tox's tool.tox.env.cleanup testenv.
+- Setup (dependencies) update.
+
 1.5.0 (2025-09-01)
 ------------------
 - Making the package typed.
