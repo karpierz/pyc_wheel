@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyc_wheel documentation &#8212; pyc_wheel 2.0.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css?v=5283bb3d" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css?v=a5c4661c" />
+    
+    <script src="_static/documentation_options.js?v=de48c32c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/tabs.js?v=3030b3cb"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="CHANGES.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="CHANGES.html" title="Changelog"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pyc_wheel 2.0.12 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyc_wheel documentation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="pyc-wheel-documentation">
+<h1>pyc_wheel documentation<a class="headerlink" href="#pyc-wheel-documentation" title="Link to this heading">¶</a></h1>
+</section>
+<section id="pyc-wheel">
+<span id="readme"></span><h1>pyc_wheel<a class="headerlink" href="#pyc-wheel" title="Link to this heading">¶</a></h1>
+<p>Compile all py files in a wheel to pyc files.</p>
+</section>
+<section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h1>
+<p><strong>pyc_wheel</strong> is a strict fork of Grant Patten’s <a class="reference external" href="https://pypi.org/project/pycwheel/">pycwheel</a> package
+with a fixes allowing to work with Python3 or higher and with a code
+reformatting and some improvements.</p>
+<p><a class="reference external" href="https://pypi.org/project/pyc-wheel/">PyPI record</a>.</p>
+<p><a class="reference external" href="https://karpierz.github.io/pyc_wheel/">Documentation</a>.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
+<p>Processing the wheel in place:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pyc_wheel<span class="w"> </span>your_wheel-1.0.0-py3-none-any.whl
+<span class="c1"># Output: your_wheel-1.0.0-py3-none-any.whl</span>
+</pre></div>
+</div>
+<p>or renaming for the python version:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3.13<span class="w"> </span>-m<span class="w"> </span>pyc_wheel<span class="w"> </span>--rename<span class="w"> </span>your_wheel-1.0.0-py3-none-any.whl
+<span class="c1"># Output: your_wheel-1.0.0-cp313-none-any.whl</span>
+</pre></div>
+</div>
+<p>or with backup:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3.13<span class="w"> </span>-m<span class="w"> </span>pyc_wheel<span class="w"> </span>--rename<span class="w"> </span>--with-backup<span class="w"> </span>your_wheel-1.0.0-py3-none-any.whl
+<span class="c1"># Output: your_wheel-1.0.0-cp313-none-any.whl</span>
+<span class="c1">#         your_wheel-1.0.0-py3-none-any.whl.bak</span>
+</pre></div>
+</div>
+<p>or with quiet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pyc_wheel<span class="w"> </span>--quiet<span class="w"> </span>your_wheel-1.0.0-py3-none-any.whl
+<span class="c1"># Output: your_wheel-1.0.0-py3-none-any.whl</span>
+</pre></div>
+</div>
+<p>or skipping compilation for a file subset:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pyc_wheel<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;some/regex&quot;</span><span class="w"> </span>your_wheel-1.0.0-py3-none-any.whl
+</pre></div>
+</div>
+<p>To check all available processing options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pyc_wheel<span class="w"> </span>--help
+</pre></div>
+</div>
+</section>
+</section>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+<p>Prerequisites:</p>
+<ul class="simple">
+<li><p>Python 3.10 or higher</p>
+<ul>
+<li><p><a class="reference external" href="https://www.python.org/">https://www.python.org/</a></p></li>
+</ul>
+</li>
+<li><p>pip and setuptools</p>
+<ul>
+<li><p><a class="reference external" href="https://pypi.org/project/pip/">https://pypi.org/project/pip/</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/setuptools/">https://pypi.org/project/setuptools/</a></p></li>
+</ul>
+</li>
+</ul>
+<p>To install run:</p>
+<blockquote>
+<div><pre class="literal-block">python -m pip install --upgrade pyc_wheel</pre>
+</div></blockquote>
+</section>
+<section id="development">
+<h1>Development<a class="headerlink" href="#development" title="Link to this heading">¶</a></h1>
+<p>Prerequisites:</p>
+<ul>
+<li><p>Development is strictly based on <em>tox</em>. To install it run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">tox</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Visit <a class="reference external" href="https://github.com/karpierz/pyc_wheel">Development page</a>.</p>
+<p>Installation from sources:</p>
+<p>clone the sources:</p>
+<blockquote>
+<div><pre class="literal-block">git clone <a class="reference external" href="https://github.com/karpierz/pyc_wheel">https://github.com/karpierz/pyc_wheel</a> pyc_wheel</pre>
+</div></blockquote>
+<p>and run:</p>
+<blockquote>
+<div><pre class="literal-block">python -m pip install ./pyc_wheel</pre>
+</div></blockquote>
+<p>or on development mode:</p>
+<blockquote>
+<div><pre class="literal-block">python -m pip install --editable ./pyc_wheel</pre>
+</div></blockquote>
+</section>
+<section id="license">
+<h1>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h1>
+<blockquote>
+<div><div class="line-block">
+<div class="line">Copyright (c) 2019-2026 Adam Karpierz</div>
+<div class="line">Copyright (c) 2016 Grant Patten</div>
+<div class="line">Licensed under the MIT License</div>
+<div class="line"><a class="reference external" href="https://opensource.org/license/mit">https://opensource.org/license/mit</a></div>
+<div class="line">Please refer to the accompanying LICENSE file.</div>
+</div>
+</div></blockquote>
+</section>
+<section id="authors">
+<h1>Authors<a class="headerlink" href="#authors" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p>Grant Patten &lt;<a class="reference external" href="mailto:grant&#37;&#52;&#48;gpatten&#46;com">grant<span>&#64;</span>gpatten<span>&#46;</span>com</a>&gt;</p></li>
+<li><p>Adam Karpierz &lt;<a class="reference external" href="mailto:adam&#37;&#52;&#48;karpierz&#46;net">adam<span>&#64;</span>karpierz<span>&#46;</span>net</a>&gt;</p></li>
+</ul>
+</section>
+<section id="sponsoring">
+<h1>Sponsoring<a class="headerlink" href="#sponsoring" title="Link to this heading">¶</a></h1>
+<div class="line-block">
+<div class="line">If you would like to sponsor the development of this project, your contribution
+is greatly appreciated.</div>
+<div class="line">As I am now retired, any support helps me dedicate more time to maintaining and
+improving this work.</div>
+</div>
+<p><a class="reference external" href="https://www.paypal.com/donate/?hosted_button_id=FX8L7CJUGLW7S">Donate</a></p>
+</section>
+<section id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CHANGES.html">Changelog</a></li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">pyc_wheel documentation</a></li>
+<li><a class="reference internal" href="#pyc-wheel">pyc_wheel</a></li>
+<li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#development">Development</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+<li><a class="reference internal" href="#authors">Authors</a></li>
+<li><a class="reference internal" href="#sponsoring">Sponsoring</a></li>
+<li><a class="reference internal" href="#contents">Contents</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CHANGES.html"
+                          title="next chapter">Changelog</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="CHANGES.html" title="Changelog"
+             >next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pyc_wheel 2.0.12 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyc_wheel documentation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright Adam Karpierz, Grant Patten.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    </div>
+  </body>
+</html>
