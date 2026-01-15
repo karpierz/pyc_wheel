@@ -178,11 +178,12 @@ def rewrite_dist_info(dist_info_path: Path, *,
                     file_dest = str(pyc_file)
 
                     pyc_path = whl_path/pyc_file
-                    with pyc_path.open("rb") as f:
-                        data = f.read()
-                    hash_obj = HASH_ALGORITHM(data)
-                    file_hash = f"{hash_obj.name}={_b64encode(hash_obj.digest())}"
-                    file_len  = str(len(data))
+                    if pyc_path.exists():
+                        with pyc_path.open("rb") as f:
+                            data = f.read()
+                        hash_obj = HASH_ALGORITHM(data)
+                        file_hash = f"{hash_obj.name}={_b64encode(hash_obj.digest())}"
+                        file_len  = str(len(data))
             record_data.append((file_dest, file_hash, file_len))
 
     with record_path.open("w", newline="\n") as record:

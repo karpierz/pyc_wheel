@@ -28,15 +28,15 @@ or renaming for the python version:
 
 .. code-block:: bash
 
-    $ python3.12 -m pyc_wheel --rename your_wheel-1.0.0-py3-none-any.whl
-    # Output: your_wheel-1.0.0-cp312-none-any.whl
+    $ python3.13 -m pyc_wheel --rename your_wheel-1.0.0-py3-none-any.whl
+    # Output: your_wheel-1.0.0-cp313-none-any.whl
 
 or with backup:
 
 .. code-block:: bash
 
-    $ python3.12 -m pyc_wheel --rename --with-backup your_wheel-1.0.0-py3-none-any.whl
-    # Output: your_wheel-1.0.0-cp312-none-any.whl
+    $ python3.13 -m pyc_wheel --rename --with-backup your_wheel-1.0.0-py3-none-any.whl
+    # Output: your_wheel-1.0.0-cp313-none-any.whl
     #         your_wheel-1.0.0-py3-none-any.whl.bak
 
 or with quiet:
@@ -124,11 +124,22 @@ Authors
 * Grant Patten <grant@gpatten.com>
 * Adam Karpierz <adam@karpierz.net>
 
+Sponsoring
+==========
+
+| If you would like to sponsor the development of this project, your contribution
+  is greatly appreciated.
+| As I am now retired, any support helps me dedicate more time to maintaining and
+  improving this work.
+
+`Donate`_
+
 .. |package| replace:: pyc_wheel
 .. |package_bold| replace:: **pyc_wheel**
-.. |copyright| replace:: Copyright (c) 2019-2025 Adam Karpierz
-.. |respository| replace:: https://github.com/karpierz/pyc_wheel.git
+.. |copyright| replace:: Copyright (c) 2019-2026 Adam Karpierz
+.. |respository| replace:: https://github.com/karpierz/pyc_wheel
 .. _Development page: https://github.com/karpierz/pyc_wheel
-.. _PyPI record: https://pypi.org/project/pyc_wheel/
-.. _Documentation: https://pyc-wheel.readthedocs.io/
+.. _PyPI record: https://pypi.org/project/pyc-wheel/
+.. _Documentation: https://karpierz.github.io/pyc_wheel/
+.. _Donate: https://www.paypal.com/donate/?hosted_button_id=FX8L7CJUGLW7S
 .. _pycwheel: https://pypi.org/project/pycwheel/

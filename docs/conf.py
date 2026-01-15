@@ -4,6 +4,8 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import os
+
 from sphinx import application
 
 about = __import__("pkg_about").about_from_setup()
@@ -115,3 +117,10 @@ apidoc_output_dir = 'api'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
+
+# -- Options for linkcheck extension -----------------------------------------
+
+linkcheck_ignore = []
+doc_url = about.__metadata__.get("urls").get("Documentation")
+if doc_url is not None and os.getenv("TOX_FIRST_BUILD") == "1":
+    linkcheck_ignore += [rf"{doc_url.rstrip('/')}/.*"]

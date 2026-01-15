@@ -1,33 +1,42 @@
 Changelog
 =========
 
+2.0.12 (2026-01-10)
+-------------------
+- Fixing the file exclusion error.
+- Marked the package as typed.
+- Copyright year update.
+- The documentation has been moved from Read the Docs to GitHub Pages.
+- Added the 'tool.tox.env.cleanup' test environment.
+- Setup update (mainly dependencies) and bug fixes.
+
 1.5.0 (2025-09-01)
 ------------------
-- Making the package typed.
-- Setup (dependencies) update.
+- Made the package typed.
+- Setup update (mainly dependencies).
 
 1.3.6 (2025-07-07)
 ------------------
 - Unittests have been added.
 - 100% code coverage.
 - A few minor code improvements.
-- Setup (dependencies) update.
+- Setup update (mainly dependencies).
 
 1.3.5 (2025-06-11)
 ------------------
-- Setup (dependencies) update.
+- Setup update (mainly dependencies).
 
 1.3.4 (2025-05-15)
 ------------------
-- The distribution is now created using 'build' instead of 'setuptools'.
-- Setup (dependencies) update (due to regressions in tox and setuptools).
+- The distribution is now built using 'build' instead of 'setuptools'.
+- Setup update (mainly dependencies) (due to regressions in tox and setuptools).
 
 1.3.2 (2025-05-10)
 ------------------
-- Add support for Python 3.14
-- Drop support for Python 3.9 (due to compatibility issues).
-- Add support for PyPy 3.11
-- Drop support for PyPy 3.9
+- Added support for Python 3.14
+- Dropped support for Python 3.9 (due to compatibility issues).
+- Added support for PyPy 3.11
+- Dropped support for PyPy 3.9
 - `Add --rename and --symlink options.
   <https://github.com/karpierz/pyc_wheel/pull/20>`_
 - `Fix for a bug <https://github.com/karpierz/pyc_wheel/issues/21>`_
@@ -35,15 +44,15 @@ Changelog
   <https://github.com/karpierz/pyc_wheel/issues/19>`_
 - `Fix links in README.rst
   <https://github.com/karpierz/pyc_wheel/pull/15>`_
-- Update readthedocs's python to version 3.13
-- Update tox's base_python to version 3.13
-- Setup (dependencies) update.
+- Updated Read the Docs' Python version to 3.13
+- Updated tox's base_python to version 3.13
+- Setup update (mainly dependencies).
 
 1.3.0 (2025-02-10)
 ------------------
-- Add support for Python 3.10, 3.11, 3.12 and 3.13
-- Drop support for Python 3.6, 3.7 and 3.8
-- Add support for PyPy 3.9 and 3.10
+- Added support for Python 3.10, 3.11, 3.12 and 3.13
+- Dropped support for Python 3.6, 3.7 and 3.8
+- Added support for PyPy 3.9 and 3.10
 - `Add --optimize argument to allow setting the optimization level
   of the compiler. <https://github.com/karpierz/pyc_wheel/pull/14>`_
 - `Wheel name should include Python tag.
@@ -56,9 +65,9 @@ Changelog
 - 100% code linting.
 - Copyright year update.
 - Setup update (currently based on pyproject.toml).
-- | Tox configuration has been moved to pyproject.toml
+- | The tox configuration has been moved to pyproject.toml
   | and now based on tox >= 4.0
-- Setup (dependencies) update.
+- Setup update (mainly dependencies).
 
 1.2.7 (2021-10-14)
 ------------------
@@ -70,12 +79,12 @@ Changelog
 
 1.2.4 (2020-10-18)
 ------------------
-- Drop support for Python 3.5.
+- Dropped support for Python 3.5.
 - Fixed docs setup.
 
 1.1.0 (2020-09-22)
 ------------------
-- Add support for Python 3.9.
+- Added support for Python 3.9.
 - `Fixed improper permission setting to read distribution.
   <https://github.com/karpierz/pyc_wheel/pull/4>`_
 - Setup general update and cleanup.
