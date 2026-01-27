@@ -5,7 +5,7 @@ include README.rst
 include CHANGES.rst
 include LICENSE
 include pyproject.toml
-include .readthedocs.yml
+include noxfile.py
 
 graft docs
 
