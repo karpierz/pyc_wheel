@@ -88,7 +88,7 @@ class MainTestCase(unittest.TestCase):
         py_tag_prefix = "cp" if self.is_cpython else "pp"
         py_ver_prefix = "cp" if self.is_cpython else "pypy"
         py_ver_suffix = ""   if self.is_cpython else "_pp73"
-        whl_file = self.data_dir/(f"crc_ct-1.4.3-{py_tag_prefix}{py_version}-"
+        whl_file = self.data_dir/(f"crcc-2.2.0-{py_tag_prefix}{py_version}-"
                                   f"{py_ver_prefix}{py_version}{py_ver_suffix}-win_amd64.whl")
         main([str(whl_file)])
         self.assertTrue(whl_file.exists())
