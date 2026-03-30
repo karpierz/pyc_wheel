@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.0 (2026-03-30)
+------------------
+- Setup update and improvement.
+
 2.2.0 (2026-02-13)
 ------------------
 - Added support for Python 3.15
