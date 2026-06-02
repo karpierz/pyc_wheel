@@ -21,15 +21,30 @@ py_version = "".join(platform.python_version_tuple()[0:2])
 
 class MainTestCase(unittest.TestCase):
 
+    is_cpython = py_implementation.lower() == "cpython"
+    is_pypy    = py_implementation.lower() == "pypy"
+    is_graalpy = py_implementation.lower() == "graalvm"
+
     @classmethod
     def setUpClass(cls):
-        cls.is_cpython = py_implementation.lower() == "cpython"
-        cls.data_dir   = Path(tempfile.mkdtemp(prefix="pyc_wheel_"))
+        if cls.is_cpython:
+            cls.py_tag_prefix = "cp"
+            cls.py_ver_prefix = "cp"
+            cls.py_ver_suffix = ""
+        elif cls.is_pypy:  # pragma: no cover
+            cls.py_tag_prefix = "pp"
+            cls.py_ver_prefix = "pypy"
+            cls.py_ver_suffix = "_pp73"
+        elif cls.is_graalpy:  # pragma: no cover
+            cls.py_tag_prefix = "graalpy"
+            cls.py_ver_prefix = "graalpy250_"
+            cls.py_ver_suffix = "_native"
+        cls.data_dir = Path(tempfile.mkdtemp(prefix="pyc_wheel_"))
         cls.copydir(data_dir, cls.data_dir, dirs_exist_ok=True)
 
     @classmethod
     def tearDownClass(cls):
-        cls.rmdir(cls.data_dir)
+        cls.rmtree(cls.data_dir)
 
     def test_simple(self):
         whl_file = self.data_dir/"renumerate-1.3.5-py3-none-any.whl"
@@ -58,23 +73,21 @@ class MainTestCase(unittest.TestCase):
         main([str(whl_file)])
         self.assertTrue(whl_file.exists())
 
-    @unittest.skipUnless(py_implementation.lower() in ("cpython", "pypy"),
+    @unittest.skipUnless(is_cpython or is_pypy,
                          "Only for CPython or PyPy")
     def test_rename(self):
-        py_tag_prefix = "cp" if self.is_cpython else "pp"
         whl_file = self.data_dir/"annotate-1.2.4-py3-none-any.whl"
-        whl_file_renamed = self.data_dir/(f"annotate-1.2.4-{py_tag_prefix}{py_version}-"
+        whl_file_renamed = self.data_dir/(f"annotate-1.2.4-{self.py_tag_prefix}{py_version}-"
                                           "none-any.whl")
         main([str(whl_file), "--rename"])
         self.assertFalse(whl_file.exists())
         self.assertTrue(whl_file_renamed.exists())
 
-    @unittest.skipUnless(py_implementation.lower() in ("cpython", "pypy"),
+    @unittest.skipUnless(is_cpython or is_pypy,
                          "Only for CPython or PyPy")
     def test_symlink(self):
-        py_tag_prefix = "cp" if self.is_cpython else "pp"
         whl_file = self.data_dir/"pkg_about-1.3.7-py3-none-any.whl"
-        whl_file_renamed = self.data_dir/(f"pkg_about-1.3.7-{py_tag_prefix}{py_version}-"
+        whl_file_renamed = self.data_dir/(f"pkg_about-1.3.7-{self.py_tag_prefix}{py_version}-"
                                           "none-any.whl")
         main([str(whl_file), "--symlink"])
         self.assertTrue(whl_file.exists())
@@ -82,14 +95,11 @@ class MainTestCase(unittest.TestCase):
         self.assertTrue(whl_file.is_symlink())
         self.assertTrue(whl_file.samefile(whl_file_renamed))
 
-    @unittest.skipUnless(py_implementation.lower() in ("cpython", "pypy"),
-                         "Only for CPython or PyPy")
+    @unittest.skipUnless(is_cpython or is_pypy or is_graalpy,
+                         "Only for CPython or PyPy or GraalPy")
     def test_with_tag(self):
-        py_tag_prefix = "cp" if self.is_cpython else "pp"
-        py_ver_prefix = "cp" if self.is_cpython else "pypy"
-        py_ver_suffix = ""   if self.is_cpython else "_pp73"
-        whl_file = self.data_dir/(f"crcc-2.2.0-{py_tag_prefix}{py_version}-"
-                                  f"{py_ver_prefix}{py_version}{py_ver_suffix}-win_amd64.whl")
+        whl_file = self.data_dir/(f"crcc-2.4.0-{self.py_tag_prefix}{py_version}-"
+                   f"{self.py_ver_prefix}{py_version}{self.py_ver_suffix}-win_amd64.whl")
         main([str(whl_file)])
         self.assertTrue(whl_file.exists())
 
@@ -120,10 +130,10 @@ class MainTestCase(unittest.TestCase):
         return path.mkdir(mode=mode, parents=parents, exist_ok=exist_ok)
 
     @classmethod  # pragma: no cover
-    def rmdir(cls, path: Path, *, ignore_errors=False, onerror=None):
+    def rmtree(cls, path: Path, *, ignore_errors=False, on_error=None):
         if not path.exists(): return
         shutil.rmtree(str(path), ignore_errors=ignore_errors,
-                      onerror=onerror or cls.__remove_readonly)
+                      onerror=on_error or cls.__remove_readonly)
 
     @staticmethod  # pragma: no cover
     def __remove_readonly(func, path, excinfo):

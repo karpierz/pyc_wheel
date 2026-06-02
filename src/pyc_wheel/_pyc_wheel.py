@@ -42,6 +42,8 @@ def create_python_tag() -> str:
         py_impl_abbrev = "cp"
     elif py_implementation.lower() == "pypy":  # pragma: no cover
         py_impl_abbrev = "pp"
+    elif py_implementation.lower() == "graalvm":  # pragma: no cover
+        py_impl_abbrev = "gp"
     else:
         raise NotImplementedError("Python implementation currently not supported!")
     return f"{py_impl_abbrev}{py_major_version}{py_minor_version}"
@@ -223,6 +225,11 @@ def rewrite_dist_info(dist_info_path: Path, *,
             tag_components[0] = create_python_tag()
             pyc_tag = "-".join(tag_components)
             break
+        if (python_tag == f"graalpy{py_major_version}{py_minor_version}"  # pragma: no cover
+           and py_implementation.lower() == "graalvm"):
+            tag_components[0] = create_python_tag()
+            pyc_tag = "-".join(tag_components)
+            break
 
     if pyc_tag is None:
         raise RuntimeError("Cannot convert wheel with the used interpreter.")
@@ -247,7 +254,7 @@ def _get_platform() -> str:  # pragma: no cover # not used for now
 
 def _b64encode(data: bytes) -> str:
     """urlsafe_b64encode without padding"""
-    return base64.urlsafe_b64encode(data).rstrip(b"=").decode("utf-8")
+    return base64.urlsafe_b64encode(data).rstrip(b"=").decode()
 
 
 def main(argv: list[str] = sys.argv[1:]) -> int:

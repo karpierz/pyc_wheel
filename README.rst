@@ -19,58 +19,57 @@ Usage
 
 Processing the wheel in place:
 
-.. code-block:: bash
+.. code:: bash
 
-    $ python3 -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl
-    # Output: your_wheel-1.0.0-py3-none-any.whl
+  $ python3 -m pyc_wheel your_wheel-1.0.0-py3-none-any.whl
+  # Output: your_wheel-1.0.0-py3-none-any.whl
 
 or renaming for the python version:
 
-.. code-block:: bash
+.. code:: bash
 
-    $ python3.13 -m pyc_wheel --rename your_wheel-1.0.0-py3-none-any.whl
-    # Output: your_wheel-1.0.0-cp313-none-any.whl
+  $ python3.13 -m pyc_wheel --rename your_wheel-1.0.0-py3-none-any.whl
+  # Output: your_wheel-1.0.0-cp313-none-any.whl
 
 or with backup:
 
-.. code-block:: bash
+.. code:: bash
 
-    $ python3.13 -m pyc_wheel --rename --with-backup your_wheel-1.0.0-py3-none-any.whl
-    # Output: your_wheel-1.0.0-cp313-none-any.whl
-    #         your_wheel-1.0.0-py3-none-any.whl.bak
+  $ python3.13 -m pyc_wheel --rename --with-backup your_wheel-1.0.0-py3-none-any.whl
+  # Output: your_wheel-1.0.0-cp313-none-any.whl
+  #         your_wheel-1.0.0-py3-none-any.whl.bak
 
 or with quiet:
 
-.. code-block:: bash
+.. code:: bash
 
-    $ python3 -m pyc_wheel --quiet your_wheel-1.0.0-py3-none-any.whl
-    # Output: your_wheel-1.0.0-py3-none-any.whl
+  $ python3 -m pyc_wheel --quiet your_wheel-1.0.0-py3-none-any.whl
+  # Output: your_wheel-1.0.0-py3-none-any.whl
 
 or skipping compilation for a file subset:
 
-.. code-block:: bash
+.. code:: bash
 
-    $ python3 -m pyc_wheel --exclude "some/regex" your_wheel-1.0.0-py3-none-any.whl
+  $ python3 -m pyc_wheel --exclude "some/regex" your_wheel-1.0.0-py3-none-any.whl
 
 To check all available processing options:
 
-.. code-block:: bash
+.. code:: bash
 
-    $ python3 -m pyc_wheel --help
+  $ python3 -m pyc_wheel --help
 
 Installation
 ============
 
 Prerequisites:
 
-+ Python 3.10 or higher
++ Python 3.11 or higher
 
   * https://www.python.org/
 
-+ pip and setuptools
++ pip
 
   * https://pypi.org/project/pip/
-  * https://pypi.org/project/setuptools/
 
 To install run:
 
