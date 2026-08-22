@@ -3,11 +3,11 @@
 
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = [ "setuptools>=81.0.0", "packaging>=26.2.0" ]
+requires = [ "setuptools>=81.0.0", "packaging>=26.3.0" ]
 
 [project]
 name = "pyc_wheel"
-version = "2.4.3"
+version = "2.4.4"
 description = "Compile all py files in a wheel to pyc files."
 keywords = [ "pyc_wheel", "pycwheel", "wheel", "pyc", "compile" ]
 license = "MIT"
@@ -52,7 +52,7 @@ dynamic = [ "readme" ]
 # entry-points.pyc_wheel.magical.epoint = "pyc_wheel:main_epoint"
 dependencies = [
   # mandatory
-  "typing-extensions>=4.15.0",
+  "typing-extensions>=4.16.0",
   "setuptools>=81.0.0", # needed because distutils
   "pkg-about>=2.4.0",
   # others
@@ -60,7 +60,7 @@ dependencies = [
 
 [dependency-groups]
 base = [
-  "pip>=26.1.2; platform_python_implementation!='GraalVM'",
+  "pip>=26.2.1; platform_python_implementation!='GraalVM'",
   "pip>=24.3.1; platform_python_implementation=='GraalVM'",
   "setuptools>=81.0.0",
 ]
@@ -72,9 +72,9 @@ test = [
 ]
 coverage = [
   { include-group = "test" },
-  "coverage>=7.14.1",
+  "coverage>=7.15.4",
   "covdefaults>=2.3.0",
-  "diff-cover>=10.3.0",
+  "diff-cover>=10.5.1",
 ]
 docs = [
   { include-group = "base" },
@@ -95,15 +95,15 @@ build = [
   { include-group = "test" },
   "check-manifest>=0.51",
   "build>=1.5.0",
-  "twine>=6.2.0",
+  "twine>=7.0.0",
 ]
 publish = [
-  "twine>=6.2.0",
+  "twine>=7.0.0",
 ]
 typing = [
   { include-group = "base" },
-  "mypy>=2.1.0",
-  "mypy_extensions>=1.1.0",
+  "mypy>=2.3.1",
+  "mypy-extensions>=1.1.0",
   "types-setuptools>=81.0.0.20260209",
 ]
 lint = [

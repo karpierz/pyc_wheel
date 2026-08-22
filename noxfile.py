@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Zlib
 
 # /// script
-# dependencies = ["nox>=2026.4.10", "nox_ext", "nox_lib"]
+# dependencies = ["nox>=2026.8.17", "nox_ext", "nox_lib"]
 # ///
 
 from __future__ import annotations

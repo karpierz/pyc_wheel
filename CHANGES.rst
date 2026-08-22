@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.4.4 (2026-08-20)
+------------------
+- Setup update and improvement.
+
 2.4.3 (2026-06-01)
 ------------------
 - Added preliminary support for GraalPy 3.12
