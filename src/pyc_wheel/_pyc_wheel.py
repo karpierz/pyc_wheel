@@ -180,13 +180,12 @@ def rewrite_dist_info(dist_info_path: Path, *,
                     file_dest = str(pyc_file)
 
                     pyc_path = whl_path/pyc_file
-                    if pyc_path.exists():
+                    if pyc_path.exists():  # pragma: no branch
                         with pyc_path.open("rb") as f:
                             data = f.read()
                         hash_obj = HASH_ALGORITHM(data)
                         file_hash = f"{hash_obj.name}={_b64encode(hash_obj.digest())}"
                         file_len  = str(len(data))
-                    else: pass  # pragma: no cover
             record_data.append((file_dest, file_hash, file_len))
 
     with record_path.open("w", newline="\n") as record:

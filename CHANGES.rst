@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.4.5 (2026-10-03)
+------------------
+- Added support for PyPy 3.12
+- Updated nox's default python to version 3.14
+- Setup update and improvement.
+
 2.4.4 (2026-08-20)
 ------------------
 - Setup update and improvement.

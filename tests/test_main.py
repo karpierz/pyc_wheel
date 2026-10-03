@@ -34,7 +34,7 @@ class MainTestCase(unittest.TestCase):
         elif cls.is_pypy:  # pragma: no cover
             cls.py_tag_prefix = "pp"
             cls.py_ver_prefix = "pypy"
-            cls.py_ver_suffix = "_pp73"
+            cls.py_ver_suffix = "_pp80"
         elif cls.is_graalpy:  # pragma: no cover
             cls.py_tag_prefix = "graalpy"
             cls.py_ver_prefix = "graalpy250_"
