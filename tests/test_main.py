@@ -37,7 +37,7 @@ class MainTestCase(unittest.TestCase):
             cls.py_ver_suffix = "_pp80"
         elif cls.is_graalpy:  # pragma: no cover
             cls.py_tag_prefix = "graalpy"
-            cls.py_ver_prefix = "graalpy250_"
+            cls.py_ver_prefix = f"graalpy{'250' if sys.version_info[:2] <= (3, 12) else '253'}_"
             cls.py_ver_suffix = "_native"
         cls.data_dir = Path(tempfile.mkdtemp(prefix="pyc_wheel_"))
         cls.copydir(data_dir, cls.data_dir, dirs_exist_ok=True)

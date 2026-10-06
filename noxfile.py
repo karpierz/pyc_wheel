@@ -48,7 +48,9 @@ def cleanup(session: nox.Session) -> None:
     nox_lib.cleanup.clean_cmd(session)
     nox_lib.cleanup.cleanup(session)
 
-@nox.session(python=[*PY_VERSIONS, "pypy3.11", "pypy3.12", "graalpy3.12"])
+@nox.session(python=[*PY_VERSIONS,
+                     "pypy3.11", "pypy3.12",
+                     "graalpy3.12", "graalpy3.13"])
 def tests(session: nox.Session) -> None:
     """Running tests"""
     session.install(".", "--group=test")
