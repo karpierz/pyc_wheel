@@ -4,11 +4,16 @@
 
 """Compile all py files in a wheel to pyc files."""
 
+from __future__ import annotations
+
+__all__ = ("convert_wheel", "main")
+
 import platform
 import sys
 import os
 import setuptools  # noqa: F401 # needed because distutils
 import distutils
+import struct
 import re
 import stat
 import shutil
@@ -22,9 +27,6 @@ import base64
 from datetime import datetime
 from pathlib import Path
 import logging
-
-__all__ = ('convert_wheel', 'main')
-
 
 HASH_ALGORITHM = hashlib.sha256
 
@@ -94,7 +96,7 @@ def convert_wheel(whl_file: Path, *,
             raise RuntimeError(f"Error compiling Python sources in wheel {whl_file.name}")
 
         # Remove all original py files
-        for py_file in whl_path.glob("**/*.py"):
+        for py_file in whl_path.rglob("*.py"):
             if py_file.is_file():  # pragma: no branch
                 if exclude is None or not exclude.search(str(py_file)):
                     if not quiet: print(f"Deleting py file: {py_file}")
@@ -244,8 +246,9 @@ def rewrite_dist_info(dist_info_path: Path, *,
 def _get_platform() -> str:  # pragma: no cover # not used for now
     """Return our platform name 'win32', 'linux_x86_64'"""
     get_platform = distutils.util.get_platform  # type: ignore[attr-defined]
+    is_32bits  = (struct.calcsize("P") <= 4)
     result: str = get_platform().replace(".", "_").replace("-", "_")
-    if result == "linux_x86_64" and sys.maxsize == 2147483647:
+    if result == "linux_x86_64" and is_32bits:
         # pip pull request #3497
         result = "linux_i686"
     return result

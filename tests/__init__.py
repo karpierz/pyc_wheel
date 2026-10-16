@@ -1,7 +1,9 @@
 # Copyright (c) 1994 Adam Karpierz
 # SPDX-License-Identifier: Zlib
 
-__all__ = ('top_dir', 'test_dir')
+from __future__ import annotations
+
+__all__ = ("top_dir", "test_dir")
 
 import sys, pathlib
 sys.dont_write_bytecode = True
